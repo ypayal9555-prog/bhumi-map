@@ -6,6 +6,8 @@ between shareholders, and keep a history of saved calculations.
 
 Runs entirely in the browser. No backend, no account, no network calls after the page loads.
 
+**Live app:** <https://ypayal9555-prog.github.io/bhumi-map/>
+
 ## Features
 
 - **Live plot drawing** — reconstructs points A/B/C/D from the four sides + diagonal using
@@ -95,37 +97,26 @@ nothing reads it.
 
 `npm run build` emits a static site into `dist/`, so any static host works:
 
-- **GitHub Pages** — the build uses a relative base, so it runs from a project subpath. Push
-  `dist/` from CI, or set Pages to "GitHub Actions" and build there.
+- **GitHub Pages** — live at <https://ypayal9555-prog.github.io/bhumi-map/>. Every push to
+  `main` runs `.github/workflows/deploy-pages.yml`, which type-checks, tests, builds and
+  publishes. The base path is derived from `GITHUB_REPOSITORY` in `vite.config.ts`, so a fork
+  or a rename deploys to its own subpath without edits. Local builds stay at `/`.
 - **Netlify / Vercel / Cloudflare Pages** — build command `npm run build`, output directory
   `dist`.
 
-## Publishing to GitHub
+## Repository
 
-The repository has no remote yet. To put it on your own account:
-
-```bash
-# 1. create an empty repo on github.com (no README, no .gitignore)
-# 2. point this clone at it
-git remote add origin https://github.com/<your-user>/bhumi-map.git
-
-# 3. commit the current work and push
-git add -A
-git commit -m "Docs, licensing and repo hygiene"
-git branch -M main
-git push -u origin main
-```
-
-If you would rather start from a single clean commit, squash the history first:
+Published at <https://github.com/ypayal9555-prog/bhumi-map> (public, default branch `main`).
+To work from another machine:
 
 ```bash
-git checkout --orphan main-clean
-git add -A && git commit -m "Bhumi Map: land area calculator"
-git branch -D main && git branch -m main
-git push -u origin main --force
+git clone https://github.com/ypayal9555-prog/bhumi-map.git
+cd bhumi-map
+npm ci
+npm run dev      # http://localhost:3000
 ```
 
-Use `--force` only on your own repository, and only before anyone else has cloned it.
+A fork deploys to its own Pages URL as soon as Actions is allowed to run there.
 
 ## Project Layout
 

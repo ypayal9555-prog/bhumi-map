@@ -14,21 +14,32 @@ const vendorChunks = (id: string): string | undefined => {
   return 'vendor';
 };
 
-export default defineConfig(() => ({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, '.'),
-    },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: vendorChunks,
+export default defineConfig(() => {
+  // GitHub Pages serves a project site from /<repo>/, so the production build
+  // needs that prefix. Deriving it from GITHUB_REPOSITORY keeps the workflow
+  // honest if the repo is ever renamed or forked. A user/organisation site
+  // (<owner>.github.io) is served from the root and needs no prefix.
+  const repo = process.env.GITHUB_REPOSITORY?.split('/')[1];
+  const pagesBase = repo && !repo.endsWith('.github.io') ? `/${repo}/` : '/';
+  const base = process.env.BASE_PATH ?? pagesBase;
+
+  return {
+    base,
+    plugins: [react(), tailwindcss()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, '.'),
       },
     },
-  },
-  server: {
-    port: 3000,
-  },
-}));
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: vendorChunks,
+        },
+      },
+    },
+    server: {
+      port: 3000,
+    },
+  };
+});
