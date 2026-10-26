@@ -23,6 +23,7 @@ import {
   SQFT_PER_DISMIL,
   SQFT_PER_SQ_METER,
   FEET_PER_LINK,
+  BISWA_PER_BIGHA,
 } from '../units';
 
 interface SarvguniyaMeasurerProps {
@@ -45,7 +46,10 @@ const METER_TO_FEET = 3.28084;
 const FEET_TO_METER = 0.3048;
 const KADI_TO_METER = FEET_PER_LINK * FEET_TO_METER; // 1 link (kadi) = 0.66 ft = 0.201168 m
 const SQM_PER_HECTARE = 10000;
-const BISWA_PER_BIGHA = 20;
+
+// Display-only copies of the local standard, so the footer text can never
+// contradict the numbers the tool actually prints.
+const BISWA_SQFT_LABEL = SQFT_PER_BISWA.toLocaleString('en-IN');
 
 // Translation resources specifically for the Sarvguniya tool
 const LOCAL_TXT = {
@@ -70,7 +74,7 @@ const LOCAL_TXT = {
     phDA: 'भुजा DA (दक्षिण)',
     btnReset: 'रीसेट करें',
     btnCalc: 'मापन करें',
-    footer: '1 बिस्वा = 1220 वर्ग फीट • 20 बिस्वा = 1 बीघा • विलेज अमीन फॉर्मूला',
+    footer: `1 बिस्वा = ${BISWA_SQFT_LABEL} वर्ग फीट • ${BISWA_PER_BIGHA} बिस्वा = 1 बीघा • विलेज अमीन फॉर्मूला`,
     distTitle: '📏 ज़मीन पर वास्तविक दूरी (Actual Lengths)',
     avgTitle: '🔢 औसत गणना (Village Average)',
     areaTitle: '📐 कुल क्षेत्रफल (Total Area)',
@@ -138,7 +142,7 @@ const LOCAL_TXT = {
     phDA: 'Side DA (South)',
     btnReset: 'Reset',
     btnCalc: 'Calculate',
-    footer: '1 Biswa = 1220 sq ft • 20 Biswa = 1 Bigha • Village Amin Formula',
+    footer: `1 Biswa = ${BISWA_SQFT_LABEL} sq ft • ${BISWA_PER_BIGHA} Biswa = 1 Bigha • Village Amin Formula`,
     distTitle: '📏 Converted Ground Distances',
     avgTitle: '🔢 Opposite Side Averages',
     areaTitle: '📐 Total Area Outlines',
@@ -155,9 +159,9 @@ const LOCAL_TXT = {
     sqK: 'Square Kadi',
     dismil: 'Dismil',
     hect: 'Hectare',
-    acre: 'Acre',
-    biswa: 'Biswa',
-    bigha: 'Bigha',
+    acre: 'Acre (एकड़)',
+    biswa: 'Biswa (बिस्वा)',
+    bigha: 'Bigha (बीघा)',
     notFilled: 'Not Entered',
     noSidesMsg: 'No side dimensions entered yet.',
     incompleteMsg: 'Fill all 4 side values for a complete area and village unit breakdown.',
@@ -1008,17 +1012,17 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                         <div className={`p-4 rounded-xl border text-center space-y-1 transition-colors duration-300 ${
                           darkMode ? 'bg-amber-500/10 border-amber-500/15' : 'bg-amber-50 border-amber-200/80'
                         }`}>
-                          <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.biswa} (बिस्वा)</span>
+                          <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.biswa}</span>
                           <span className="text-2xl font-bold font-mono text-amber-950 dark:text-amber-300">{results.area.biswa.toFixed(2)}</span>
-                          <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{language === 'hi' ? '1220 वर्ग फीट' : '1220 sq ft'}</span>
+                          <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{language === 'hi' ? `${BISWA_SQFT_LABEL} वर्ग फीट` : `${BISWA_SQFT_LABEL} sq ft`}</span>
                         </div>
 
                         <div className={`p-4 rounded-xl border text-center space-y-1 transition-colors duration-300 ${
                           darkMode ? 'bg-amber-500/10 border-amber-500/15' : 'bg-amber-50 border-amber-200/80'
                         }`}>
-                          <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.bigha} (बीघा)</span>
+                          <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.bigha}</span>
                           <span className="text-2xl font-bold font-mono text-amber-950 dark:text-amber-300">{results.area.bigha.toFixed(3)}</span>
-                          <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{language === 'hi' ? '20 बिस्वा' : '20 Biswa'}</span>
+                          <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{language === 'hi' ? `${BISWA_PER_BIGHA} बिस्वा` : `${BISWA_PER_BIGHA} Biswa`}</span>
                         </div>
                       </div>
                     </div>

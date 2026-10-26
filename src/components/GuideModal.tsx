@@ -7,6 +7,20 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { X, Book, HelpCircle, AlertTriangle, Sparkles } from 'lucide-react';
 import { Language } from '../locales';
+import {
+  SQFT_PER_BISWA,
+  SQFT_PER_BIGHA,
+  SQFT_PER_ACRE,
+  SQFT_PER_KANAL,
+  SQFT_PER_MARLA,
+  SQFT_PER_GUNTHA,
+  SQFT_PER_DISMIL,
+  BISWA_PER_BIGHA,
+} from '../units';
+
+/** "1,220" — the glossary must quote the same numbers the calculator uses. */
+const fmt = (n: number) => n.toLocaleString('en-IN');
+const SQFT = (n: number) => `${fmt(n)} sq ft`;
 
 interface GuideModalProps {
   isOpen: boolean;
@@ -175,43 +189,43 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
                   <tr>
                     <td className={`px-4 py-2 font-bold ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Bigha</td>
                     <td className="px-4 py-2">बीघा</td>
-                    <td className="px-4 py-2">24,400 sq ft</td>
+                    <td className="px-4 py-2">{SQFT(SQFT_PER_BIGHA)}</td>
                     <td className={`px-4 py-2 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>UP, Rajasthan, Bihar, Bengal</td>
                   </tr>
                   <tr>
                     <td className={`px-4 py-2 font-bold ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Biswa</td>
                     <td className="px-4 py-2">बिस्वा</td>
-                    <td className="px-4 py-2">1,220 sq ft (1/20 Bigha)</td>
+                    <td className="px-4 py-2">{SQFT(SQFT_PER_BISWA)} (1/{BISWA_PER_BIGHA} Bigha)</td>
                     <td className={`px-4 py-2 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Uttar Pradesh, Punjab, Haryana</td>
                   </tr>
                   <tr>
                     <td className={`px-4 py-2 font-bold ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Acre</td>
                     <td className="px-4 py-2">एकड़</td>
-                    <td className="px-4 py-2">43,560 sq ft</td>
+                    <td className="px-4 py-2">{SQFT(SQFT_PER_ACRE)}</td>
                     <td className={`px-4 py-2 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>All India standard</td>
                   </tr>
                   <tr>
                     <td className={`px-4 py-2 font-bold ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Kanal</td>
                     <td className="px-4 py-2">कनाल</td>
-                    <td className="px-4 py-2">5,445 sq ft (1/8 Acre)</td>
+                    <td className="px-4 py-2">{SQFT(SQFT_PER_KANAL)} (1/8 Acre)</td>
                     <td className={`px-4 py-2 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Punjab, Haryana, Jammu & Kashmir</td>
                   </tr>
                   <tr>
                     <td className={`px-4 py-2 font-bold ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Marla</td>
                     <td className="px-4 py-2">मरला</td>
-                    <td className="px-4 py-2">272.25 sq ft (1/20 Kanal)</td>
+                    <td className="px-4 py-2">{SQFT(SQFT_PER_MARLA)} (1/20 Kanal)</td>
                     <td className={`px-4 py-2 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Punjab, Haryana</td>
                   </tr>
                   <tr>
                     <td className={`px-4 py-2 font-bold ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Guntha</td>
                     <td className="px-4 py-2">गुंठा</td>
-                    <td className="px-4 py-2">1,089 sq ft (1/40 Acre)</td>
+                    <td className="px-4 py-2">{SQFT(SQFT_PER_GUNTHA)} (1/40 Acre)</td>
                     <td className={`px-4 py-2 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Maharashtra, Gujarat, Karnataka</td>
                   </tr>
                   <tr>
                     <td className={`px-4 py-2 font-bold ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>Decimal / Cent</td>
                     <td className="px-4 py-2">डिसिमिल / सेंट</td>
-                    <td className="px-4 py-2">435.6 sq ft (1/100 Acre)</td>
+                    <td className="px-4 py-2">{SQFT(SQFT_PER_DISMIL)} (1/100 Acre)</td>
                     <td className={`px-4 py-2 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>West Bengal, Odisha, South India</td>
                   </tr>
                 </tbody>

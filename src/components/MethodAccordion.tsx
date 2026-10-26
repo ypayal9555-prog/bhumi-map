@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { DimensionValues, CalculationMethod, MeasuringUnit } from '../types';
 import { BookOpen, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
 import { Language } from '../locales';
-import { SQFT_PER_BISWA, SQFT_PER_BIGHA } from '../units';
+import { SQFT_PER_BISWA, SQFT_PER_BIGHA, BISWA_PER_BIGHA } from '../units';
 
 interface MethodAccordionProps {
   method: CalculationMethod;
@@ -47,6 +47,12 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
 
   // What the headline number actually is (a bad diagonal silently falls back to average).
   const shownMethod: CalculationMethod = isFallback ? 'average' : method;
+
+  // Display-only formatting of the local standard, so the explanation text can never
+  // contradict the numbers if the standard is ever adjusted in src/types.ts.
+  const BISWA_FMT = SQFT_PER_BISWA.toLocaleString('en-IN');
+  const BIGHA_FMT = SQFT_PER_BIGHA.toLocaleString('en-IN');
+  const BISWA_PER_BIGHA_FMT = BISWA_PER_BIGHA.toLocaleString('en-IN');
 
   const hasTriError = isTriangularError();
 
@@ -240,10 +246,10 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                   </div>
                   <div className="font-mono text-xs space-y-1 pl-7">
                     <p className="opacity-70">
-                      {isHi ? '1 बिस्वा = 1,220 वर्ग फुट' : '1 Biswa = 1,220 Sq Ft'}
+                      {isHi ? `1 बिस्वा = ${BISWA_FMT} वर्ग फुट` : `1 Biswa = ${BISWA_FMT} Sq Ft`}
                     </p>
                     <p className="font-bold text-sm">
-                      {avgAreaInSqFt.toFixed(2)} ÷ 1,220 = <span className="text-amber-600 dark:text-amber-400">{avgBiswa.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.biswa}</span>
+                      {avgAreaInSqFt.toFixed(2)} ÷ {BISWA_FMT} = <span className="text-amber-600 dark:text-amber-400">{avgBiswa.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.biswa}</span>
                     </p>
                   </div>
                 </div>
@@ -260,10 +266,10 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                   </div>
                   <div className="font-mono text-xs space-y-1 pl-7">
                     <p className="opacity-70">
-                      {isHi ? '1 बीघा = 20 बिस्वा = 24,400 वर्ग फुट' : '1 Bigha = 20 Biswa = 24,400 Sq Ft'}
+                      {isHi ? `1 बीघा = ${BISWA_PER_BIGHA_FMT} बिस्वा = ${BIGHA_FMT} वर्ग फुट` : `1 Bigha = ${BISWA_PER_BIGHA_FMT} Biswa = ${BIGHA_FMT} Sq Ft`}
                     </p>
                     <p className="font-bold text-sm">
-                      {avgAreaInSqFt.toFixed(2)} ÷ 24,400 = <span className="text-amber-600 dark:text-amber-400">{avgBigha.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.bigha}</span>
+                      {avgAreaInSqFt.toFixed(2)} ÷ {BIGHA_FMT} = <span className="text-amber-600 dark:text-amber-400">{avgBigha.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.bigha}</span>
                     </p>
                   </div>
                 </div>
@@ -395,10 +401,10 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                     </div>
                     <div className="font-mono text-xs space-y-1 pl-7 opacity-95">
                       <p className="opacity-70">
-                        {isHi ? '1 बिस्वा = 1,220 वर्ग फुट' : '1 Biswa = 1,220 Sq Ft'}
+                        {isHi ? `1 बिस्वा = ${BISWA_FMT} वर्ग फुट` : `1 Biswa = ${BISWA_FMT} Sq Ft`}
                       </p>
                       <p className="font-bold text-sm">
-                        {triAreaInSqFt.toFixed(2)} ÷ 1,220 = <span className="text-amber-600 dark:text-amber-400">{triBiswa.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.biswa}</span>
+                        {triAreaInSqFt.toFixed(2)} ÷ {BISWA_FMT} = <span className="text-amber-600 dark:text-amber-400">{triBiswa.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.biswa}</span>
                       </p>
                     </div>
                   </div>
@@ -417,10 +423,10 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                     </div>
                     <div className="font-mono text-xs space-y-1 pl-7 opacity-95">
                       <p className="opacity-70">
-                        {isHi ? '1 बीघा = 20 बिस्वा = 24,400 वर्ग फुट' : '1 Bigha = 20 Biswa = 24,400 Sq Ft'}
+                        {isHi ? `1 बीघा = ${BISWA_PER_BIGHA_FMT} बिस्वा = ${BIGHA_FMT} वर्ग फुट` : `1 Bigha = ${BISWA_PER_BIGHA_FMT} Biswa = ${BIGHA_FMT} Sq Ft`}
                       </p>
                       <p className="font-bold text-sm">
-                        {triAreaInSqFt.toFixed(2) } ÷ 24,400 = <span className="text-amber-600 dark:text-amber-400">{triBigha.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.bigha}</span>
+                        {triAreaInSqFt.toFixed(2) } ÷ {BIGHA_FMT} = <span className="text-amber-600 dark:text-amber-400">{triBigha.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.bigha}</span>
                       </p>
                     </div>
                   </div>

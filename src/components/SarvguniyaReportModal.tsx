@@ -6,6 +6,7 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Printer, X, Award, FileSpreadsheet, Map, Compass, Share2, Copy, Check, Send } from 'lucide-react';
+import { SQFT_PER_BISWA, SQFT_PER_DISMIL, BISWA_PER_BIGHA } from '../units';
 
 interface SarvguniyaReportModalProps {
   isOpen: boolean;
@@ -574,19 +575,19 @@ export default function SarvguniyaReportModal({
                         <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
                           <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'बिस्वा (Biswa)' : 'Biswa'}</span>
                           <p className="text-sm sm:text-base font-extrabold font-mono text-amber-600 dark:text-amber-500">{results.area.biswa.toFixed(2)}</p>
-                          <span className="text-[8px] text-stone-400 font-medium">1220 sq ft</span>
+                          <span className="text-[8px] text-stone-400 font-medium">{SQFT_PER_BISWA.toLocaleString('en-IN')} sq ft</span>
                         </div>
 
                         <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
                           <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'बीघा (Bigha)' : 'Bigha'}</span>
                           <p className="text-sm sm:text-base font-extrabold font-mono text-amber-600 dark:text-amber-500">{results.area.bigha.toFixed(3)}</p>
-                          <span className="text-[8px] text-stone-400 font-medium">20 Biswa</span>
+                          <span className="text-[8px] text-stone-400 font-medium">{BISWA_PER_BIGHA} Biswa</span>
                         </div>
 
                         <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
                           <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'डिसमिल (Dismil)' : 'Dismil'}</span>
                           <p className="text-sm sm:text-base font-extrabold font-mono text-stone-800 dark:text-stone-200">{results.area.dismil.toFixed(2)}</p>
-                          <span className="text-[8px] text-stone-400 font-medium">435.6 sq ft</span>
+                          <span className="text-[8px] text-stone-400 font-medium">{SQFT_PER_DISMIL.toLocaleString('en-IN')} sq ft</span>
                         </div>
 
                         <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
@@ -615,8 +616,8 @@ export default function SarvguniyaReportModal({
                   : '* This report serves as a digital computation record compliant with traditional revenue/Patwari benchmarks.'}
               </p>
               <div className="flex gap-2">
-                <span className="px-2 py-0.5 border rounded font-mono font-bold">1 BISWA = 1220 SQFT</span>
-                <span className="px-2 py-0.5 border rounded font-mono font-bold">20 BISWA = 1 BIGHA</span>
+                <span className="px-2 py-0.5 border rounded font-mono font-bold">1 BISWA = {SQFT_PER_BISWA} SQFT</span>
+                <span className="px-2 py-0.5 border rounded font-mono font-bold">{BISWA_PER_BIGHA} BISWA = 1 BIGHA</span>
               </div>
             </div>
           </div>
