@@ -1,8 +1,26 @@
+# --- dependencies ---
 node_modules/
-build/
+
+# --- build output ---
 dist/
+build/
+*.tsbuildinfo
+
+# --- test / tool caches ---
 coverage/
-.DS_Store
-*.log
-.env*
+.vite/
+.turbo/
+
+# --- environment / secrets: never commit these ---
+.env
+.env.*
 !.env.example
+
+# --- editor & OS noise ---
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.idea/
+.vscode/*
+!.vscode/extensions.json

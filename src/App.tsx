@@ -14,6 +14,7 @@ import SplitShares from './components/SplitShares';
 import HistoryList from './components/HistoryList';
 import ReportModal from './components/ReportModal';
 import GuideModal from './components/GuideModal';
+import FieldBanner from './components/FieldBanner';
 import { calculateAverageArea, calculateTriangularArea } from './geometryUtils';
 import { SQFT_PER_BISWA, SQFT_PER_BIGHA, SQFT_PER_ACRE } from './units';
 import { Calculator, Users, History, Compass, Ruler } from 'lucide-react';
@@ -414,13 +415,8 @@ export default function App() {
             <div className={`rounded-2xl overflow-hidden h-44 relative border shadow-sm transition-colors duration-300 ${
               darkMode ? 'border-stone-800' : 'border-stone-200'
             }`}>
-              <img
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz-FFHiAPkCyMjGQzG6LVzdx0DlgKaM-tz-xI3BSZ8F1V37HX3KyCy4HWZWCDE9Ao2iwJCFWwnpw7S0sP0ROnKq10RV0J9tOzaBCcoXSKs_QDeKd_PMa52JkPB2m5Ujks2FrynbEkWL9K70_nfcCOJ12ZRo--XqmbGB2Cnr4AeyXgIPn12BXMFuErMxVUIaReaDZSOirxmBuiNmtF5xJxnof6jJM3XhXQAgDZia3DOnitRfmy-Y-dWJx1J-zftWFEjPPNHOQP-568"
-                alt="Agricultural fields"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/10 to-transparent flex items-end p-4">
+              <FieldBanner className="absolute inset-0 w-full h-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-stone-950/5 to-transparent flex items-end p-4">
                 <p className="text-white text-xs font-medium italic leading-snug">
                   {t.precisionQuote}
                 </p>
@@ -542,13 +538,8 @@ export default function App() {
                 <div className={`rounded-2xl overflow-hidden h-36 relative border transition-colors duration-300 ${
                   darkMode ? 'border-stone-800' : 'border-stone-200'
                 }`}>
-                  <img
-                    className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz-FFHiAPkCyMjGQzG6LVzdx0DlgKaM-tz-xI3BSZ8F1V37HX3KyCy4HWZWCDE9Ao2iwJCFWwnpw7S0sP0ROnKq10RV0J9tOzaBCcoXSKs_QDeKd_PMa52JkPB2m5Ujks2FrynbEkWL9K70_nfcCOJ12ZRo--XqmbGB2Cnr4AeyXgIPn12BXMFuErMxVUIaReaDZSOirxmBuiNmtF5xJxnof6jJM3XhXQAgDZia3DOnitRfmy-Y-dWJx1J-zftWFEjPPNHOQP-568"
-                    alt="Agricultural fields"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent flex items-end p-4">
+                  <FieldBanner className="absolute inset-0 w-full h-full" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 to-transparent flex items-end p-4">
                     <p className="text-white text-xs font-medium italic leading-snug">
                       {t.precisionQuote}
                     </p>

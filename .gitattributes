@@ -1,0 +1,9 @@
+# Normalise line endings so the repo does not fill diffs with CRLF churn when
+# checked out on Windows and built on Linux.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary

@@ -1,11 +1,10 @@
 # Bhumi Map — Land Area Calculator
 
 Interactive land measurement app for Indian revenue plots. Enter the four sides (and
-optionally the BD diagonal) of a quadrilateral plot and get area in local units, split it
+optionally the BD diagonal) of a quadrilateral plot and get its area in local units, split it
 between shareholders, and keep a history of saved calculations.
 
-Originally exported from Google AI Studio (`Remix: Bhumi Map`), now maintained locally as a
-normal Vite project.
+Runs entirely in the browser. No backend, no account, no network calls after the page loads.
 
 ## Features
 
@@ -21,6 +20,15 @@ normal Vite project.
 - **Sarvguniya Measurer** — separate survey tool for map-based (1/4000, 16 or 32 inch = 1 mile)
   and ground-based measurement with guniya / tape / kadi scales.
 - **Bilingual UI (English + Hindi)** and dark mode — both persisted in `localStorage`.
+
+## Privacy
+
+Everything is local. Calculated plots, the saved history, the chosen language and the theme
+live in `localStorage` on the device. The app makes no `fetch`/XHR calls and bundles no
+analytics or AI SDK, so there is nothing to leak and nothing to configure.
+
+The one external request is the Google Fonts stylesheet in `src/index.css`; if you need a fully
+offline build, self-host Fraunces/Inter/JetBrains Mono and drop that `@import`.
 
 ## Design tokens
 
@@ -59,11 +67,13 @@ converter, the report and the Sarvguniya tool will silently drift apart.
 - **Undrawable input** — if the measurements cannot close a quadrilateral, the canvas shows a
   "cannot draw" state rather than a placeholder shape.
 
-## Run Locally
+## Getting started
 
-**Prerequisites:** Node.js 18+
+**Prerequisites:** Node.js 20 or newer.
 
 ```bash
+git clone <your-fork-url> bhumi-map
+cd bhumi-map
 npm install
 npm run dev      # http://localhost:3000
 ```
@@ -71,11 +81,51 @@ npm run dev      # http://localhost:3000
 Other scripts:
 
 ```bash
-npm test         # geometry + unit regressions (node:test)
 npm run lint     # type-check only (tsc --noEmit)
+npm test         # geometry + unit regressions (node:test)
 npm run build    # production build -> dist/
 npm run preview  # preview the production build
+npm run check    # lint + tests + build in one go
 ```
+
+No environment variables are required. Copying the old `.env.example` around is not needed —
+nothing reads it.
+
+## Deploying
+
+`npm run build` emits a static site into `dist/`, so any static host works:
+
+- **GitHub Pages** — the build uses a relative base, so it runs from a project subpath. Push
+  `dist/` from CI, or set Pages to "GitHub Actions" and build there.
+- **Netlify / Vercel / Cloudflare Pages** — build command `npm run build`, output directory
+  `dist`.
+
+## Publishing to GitHub
+
+The repository has no remote yet. To put it on your own account:
+
+```bash
+# 1. create an empty repo on github.com (no README, no .gitignore)
+# 2. point this clone at it
+git remote add origin https://github.com/<your-user>/bhumi-map.git
+
+# 3. commit the current work and push
+git add -A
+git commit -m "Docs, licensing and repo hygiene"
+git branch -M main
+git push -u origin main
+```
+
+If you would rather start from a single clean commit, squash the history first:
+
+```bash
+git checkout --orphan main-clean
+git add -A && git commit -m "Bhumi Map: land area calculator"
+git branch -D main && git branch -m main
+git push -u origin main --force
+```
+
+Use `--force` only on your own repository, and only before anyone else has cloned it.
 
 ## Project Layout
 
@@ -89,6 +139,7 @@ src/
   components/
     Header.tsx            title bar, language and dark-mode toggles
     PlotCanvas.tsx        SVG plot with draggable vertices and side badges
+    FieldBanner.tsx       drawn (not downloaded) plot illustration for empty states
     DimensionsForm.tsx    side/diagonal inputs + diagonal-mismatch warning
     MethodAccordion.tsx   explains both area methods with live numbers
     SplitShares.tsx       shareholder division
@@ -96,12 +147,19 @@ src/
     ReportModal.tsx       printable plot report
     GuideModal.tsx        in-app usage guide
     Sarvguniya*.tsx       Sarvguniya measurer, visualizer and report
+  index.css               the single @theme palette
 tests/
   geometry.test.ts        area formulas, unit factors, drawing invariants
+public/
+  favicon.svg
 ```
 
 ## Notes
 
 - All data (saved records, language, theme) lives in `localStorage`; there is no backend.
-- `.env.example` / `GEMINI_API_KEY` is left over from the AI Studio export and is **not used**
-  by any code in `src/`.
+- Any inline `@license SPDX-License-Identifier: Apache-2.0` header in a source file describes
+  that file; the whole project is Apache-2.0.
+
+## License
+
+[Apache-2.0](LICENSE) © Bhumi Map contributors

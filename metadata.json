@@ -1,8 +1,0 @@
-{
-  "name": "Remix: Bhumi Map",
-  "description": "An interactive land area calculator with live geometry drawing, bilingual labeling (English and Hindi), Village Average and Exact Triangular formula methods, unit conversion (Feet, Links, Lattha, Bigha, Biswa), split share management, and saved calculations history.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}
