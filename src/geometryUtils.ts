@@ -10,18 +10,17 @@ export function getDistance(p1: { x: number; y: number }, p2: { x: number; y: nu
 }
 
 /**
- * Solve for circle-circle intersection.
- * Returns the intersection point closest to a reference or matching preferred layout.
+ * Solve for all circle-circle intersection points.
+ * Returns null when the circles do not meet.
  */
-function getCircleIntersection(
+function getCircleIntersections(
   cx1: number,
   cy1: number,
   r1: number,
   cx2: number,
   cy2: number,
-  r2: number,
-  preferUpperY: boolean
-): { x: number; y: number } | null {
+  r2: number
+): [{ x: number; y: number }, { x: number; y: number }] | null {
   const dx = cx2 - cx1;
   const dy = cy2 - cy1;
   const d = Math.hypot(dx, dy);
@@ -36,19 +35,45 @@ function getCircleIntersection(
   const x3 = cx1 + (a * dx) / d;
   const y3 = cy1 + (a * dy) / d;
 
-  // Two candidate points:
-  // p1 = (x3 + h*dy/d, y3 - h*dx/d)
-  // p2 = (x3 - h*dy/d, y3 + h*dx/d)
-  const p1x = x3 + (h * dy) / d;
-  const p1y = y3 - (h * dx) / d;
-  const p2x = x3 - (h * dy) / d;
-  const p2y = y3 + (h * dx) / d;
+  return [
+    { x: x3 + (h * dy) / d, y: y3 - (h * dx) / d },
+    { x: x3 - (h * dy) / d, y: y3 + (h * dx) / d },
+  ];
+}
 
+/**
+ * Solve for circle-circle intersection, picking the one that best matches the
+ * preferred layout (lower y first when `preferUpperY`, higher y otherwise).
+ */
+function getCircleIntersection(
+  cx1: number,
+  cy1: number,
+  r1: number,
+  cx2: number,
+  cy2: number,
+  r2: number,
+  preferUpperY: boolean
+): { x: number; y: number } | null {
+  const both = getCircleIntersections(cx1, cy1, r1, cx2, cy2, r2);
+  if (!both) return null;
+  const [p1, p2] = both;
   if (preferUpperY) {
-    return p1y < p2y ? { x: p1x, y: p1y } : { x: p2x, y: p2y };
-  } else {
-    return p1y > p2y ? { x: p1x, y: p1y } : { x: p2x, y: p2y };
+    return p1.y < p2.y ? p1 : p2;
   }
+  return p1.y > p2.y ? p1 : p2;
+}
+
+/**
+ * Diagonal used when the user has not typed one: the diagonal of the "average"
+ * rectangle implied by the four sides. Kept in one place so the drawing, the
+ * validity check and the UI hint can never disagree.
+ */
+export function getAssumedDiagonal(dimensions: DimensionValues): number {
+  const { sideAB, sideBC, sideCD, sideDA, diagonalBD } = dimensions;
+  if (diagonalBD && diagonalBD > 0) return diagonalBD;
+  return (
+    Math.sqrt(sideCD * sideCD + sideDA * sideDA) || (sideAB + sideCD) / 1.35
+  );
 }
 
 /**
@@ -75,7 +100,7 @@ export function getCoordinatesFromDimensions(
   }
 
   // Calculate default diagonal if none provided
-  const diag = diagonalBD || Math.sqrt(sideCD * sideCD + sideDA * sideDA) || (sideAB + sideCD) / 1.35;
+  const diag = getAssumedDiagonal(dimensions);
 
   // Place D at cartesian origin (0, 0)
   const Dx = 0;
@@ -94,12 +119,21 @@ export function getCoordinatesFromDimensions(
   const Bx = bIntersect.x;
   const By = bIntersect.y;
 
-  // Solve for A as circle-circle intersection between D (radius sideDA) and B (radius sideAB)
-  // We prefer the upper intersection relative to line DB (positive Y in standard orientation)
-  const aIntersect = getCircleIntersection(Dx, Dy, sideDA, Bx, By, sideAB, true);
-  if (!aIntersect) {
+  // Solve for A as circle-circle intersection between D (radius sideDA) and B (radius sideAB).
+  // Two solutions exist; we must pick the one that keeps A on the OPPOSITE side of
+  // diagonal DB from C. Picking blindly (e.g. always "upper") folds the outline into a
+  // self-intersecting bowtie for a large share of valid plots.
+  const aIntersects = getCircleIntersections(Dx, Dy, sideDA, Bx, By, sideAB);
+  if (!aIntersects) {
     return defaultPoints;
   }
+
+  // Signed side of point P relative to the directed line D -> B (D is the origin here).
+  const sideOfLineDB = (p: { x: number; y: number }) => Bx * p.y - By * p.x;
+  const cSide = sideOfLineDB({ x: Cx, y: Cy });
+  const aIntersect =
+    aIntersects.find((p) => Math.sign(sideOfLineDB(p)) !== Math.sign(cSide)) ?? aIntersects[0];
+
   const Ax = aIntersect.x;
   const Ay = aIntersect.y;
 
@@ -183,3 +217,26 @@ export function calculateAverageArea(dimensions: DimensionValues): number {
   const avgHeight = (sideBC + sideDA) / 2;
   return avgWidth * avgHeight;
 }
+
+/**
+ * Can this set of measurements actually be drawn as a quadrilateral?
+ *
+ * `getCoordinatesFromDimensions` silently falls back to a fixed placeholder
+ * outline when the geometry is impossible, which would draw a shape that has
+ * nothing to do with the numbers on screen. Callers should check this first and
+ * show a "cannot draw" state instead of a fake plot.
+ */
+export function isPlottable(dimensions: DimensionValues): boolean {
+  const { sideAB, sideBC, sideCD, sideDA } = dimensions;
+  if (!sideAB || !sideBC || !sideCD || !sideDA) return false;
+
+  const diag = getAssumedDiagonal(dimensions);
+
+  // B sits on both the diagonal circle (around D) and the sideBC circle (around C).
+  const bPoint = getCircleIntersection(0, 0, diag, sideCD, 0, sideBC, true);
+  if (!bPoint) return false;
+
+  // A sits on the sideDA circle (around D) and the sideAB circle (around B).
+  return getCircleIntersections(0, 0, sideDA, bPoint.x, bPoint.y, sideAB) !== null;
+}
+

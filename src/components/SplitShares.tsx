@@ -9,7 +9,8 @@ import { Users, Minus, Plus } from 'lucide-react';
 
 interface SplitSharesProps {
   sharesCount: number;
-  areaInSqFt: number;
+  /** Total area expressed in the currently selected measuring unit (NOT square feet). */
+  areaInUnit: number;
   activeUnitLabel: string;
   onSharesChanged: (count: number) => void;
   darkMode: boolean;
@@ -18,7 +19,7 @@ interface SplitSharesProps {
 
 export default function SplitShares({
   sharesCount,
-  areaInSqFt,
+  areaInUnit,
   activeUnitLabel,
   onSharesChanged,
   darkMode,
@@ -41,7 +42,7 @@ export default function SplitShares({
     }
   };
 
-  const shareValue = areaInSqFt / sharesCount;
+  const shareValue = areaInUnit / sharesCount;
 
   return (
     <div className={`p-5 rounded-2xl border shadow-sm relative group transition-colors duration-300 ${
@@ -64,7 +65,7 @@ export default function SplitShares({
       <div className="space-y-4">
         <div className="space-y-1">
           <label className={`text-xs font-semibold ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
-            {t.numPartners} (साझेदारों की संख्या)
+            {t.numPartners}
           </label>
           <div className="relative flex items-center">
             <motion.button
@@ -86,7 +87,7 @@ export default function SplitShares({
               onChange={handleInputChange}
               className={`w-full text-center border focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl p-3 text-sm font-semibold font-mono ${
                 darkMode
-                  ? 'bg-stone-850 border-stone-750 text-stone-100 focus:bg-stone-950'
+                  ? 'bg-stone-850 border-stone-700 text-stone-100 focus:bg-stone-950'
                   : 'bg-white border-stone-200 text-stone-900 focus:bg-white'
               }`}
             />
@@ -105,7 +106,7 @@ export default function SplitShares({
         </div>
 
         <div className={`p-4 rounded-xl border flex justify-between items-center transition-all ${
-          darkMode ? 'bg-amber-500/10 border-amber-500/20' : 'bg-amber-505/5 bg-amber-500/5 border-amber-500/10'
+          darkMode ? 'bg-amber-500/10 border-amber-500/20' : 'bg-amber-500/5 border-amber-500/10'
         }`}>
           <div>
             <span className={`text-xs font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>

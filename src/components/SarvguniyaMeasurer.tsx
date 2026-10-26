@@ -18,6 +18,12 @@ import {
   ShieldAlert 
 } from 'lucide-react';
 import { GuniyaRulerVisualizer, SarvguniyaPlotVisualizer } from './SarvguniyaVisualizer';
+import {
+  SQFT_PER_BISWA,
+  SQFT_PER_DISMIL,
+  SQFT_PER_SQ_METER,
+  FEET_PER_LINK,
+} from '../units';
 
 interface SarvguniyaMeasurerProps {
   darkMode: boolean;
@@ -35,12 +41,10 @@ interface SarvguniyaMeasurerProps {
 }
 
 // Conversions Constants
-const KADI_TO_METER = 0.201168;
 const METER_TO_FEET = 3.28084;
 const FEET_TO_METER = 0.3048;
-const SQFT_PER_DISMIL = 435.6;
+const KADI_TO_METER = FEET_PER_LINK * FEET_TO_METER; // 1 link (kadi) = 0.66 ft = 0.201168 m
 const SQM_PER_HECTARE = 10000;
-const SQFT_PER_BISWA = 1220;
 const BISWA_PER_BIGHA = 20;
 
 // Translation resources specifically for the Sarvguniya tool
@@ -263,7 +267,10 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
           ? val * 12.5 * KADI_TO_METER 
           : val * 25 * KADI_TO_METER;
       case 'kadiGuniya50':
-        return val * 10 * KADI_TO_METER;
+        // 50 divisions per inch; 1 inch = 250 kadi at 32-inch scale, 500 kadi at 16-inch.
+        return scl === '32inch'
+          ? val * 5 * KADI_TO_METER
+          : val * 10 * KADI_TO_METER;
       case 'plasticScaleCm':
         if (scl === '1/4000') return val * 40;
         if (scl === '32inch') return val * 98.425 * KADI_TO_METER;
@@ -369,7 +376,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
     const avgWidthKadi = (bcKadi + daKadi) / 2;
 
     const areaM2 = avgLengthM * avgWidthM;
-    const areaSqFt = areaM2 * 10.7639;
+    const areaSqFt = areaM2 * SQFT_PER_SQ_METER;
     const areaSqGaj = areaSqFt / 9;
     const areaSqKadi = avgLengthKadi * avgWidthKadi;
 

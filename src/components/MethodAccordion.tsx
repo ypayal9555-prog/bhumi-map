@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { DimensionValues, CalculationMethod, MeasuringUnit } from '../types';
 import { BookOpen, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
 import { Language } from '../locales';
+import { SQFT_PER_BISWA, SQFT_PER_BIGHA } from '../units';
 
 interface MethodAccordionProps {
   method: CalculationMethod;
@@ -15,9 +16,15 @@ interface MethodAccordionProps {
   darkMode: boolean;
   language: Language;
   t: any;
+  /**
+   * True when the user supplied a diagonal but it cannot describe a real triangle,
+   * so the headline area actually comes from the Village Average method. The badge
+   * must say so instead of claiming "Exact Triangular".
+   */
+  isFallback?: boolean;
 }
 
-export default function MethodAccordion({ method, dimensions, unit, darkMode, language, t }: MethodAccordionProps) {
+export default function MethodAccordion({ method, dimensions, unit, darkMode, language, t, isFallback = false }: MethodAccordionProps) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const { sideAB, sideBC, sideCD, sideDA, diagonalBD } = dimensions;
@@ -37,6 +44,9 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
     
     return t1Fail || t2Fail;
   };
+
+  // What the headline number actually is (a bad diagonal silently falls back to average).
+  const shownMethod: CalculationMethod = isFallback ? 'average' : method;
 
   const hasTriError = isTriangularError();
 
@@ -66,8 +76,8 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
   const avgHeight = (sideBC + sideDA) / 2;
   const avgAreaInUnit = avgWidth * avgHeight;
   const avgAreaInSqFt = avgAreaInUnit * factor;
-  const avgBiswa = avgAreaInSqFt / 1220;
-  const avgBigha = avgAreaInSqFt / 24400;
+  const avgBiswa = avgAreaInSqFt / SQFT_PER_BISWA;
+  const avgBigha = avgAreaInSqFt / SQFT_PER_BIGHA;
 
   // Triangle calculations
   const s1 = (sideAB + sideDA + (diagonalBD || 0)) / 2;
@@ -80,8 +90,8 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
 
   const triTotalAreaInUnit = triArea1 + triArea2;
   const triAreaInSqFt = triTotalAreaInUnit * factor;
-  const triBiswa = triAreaInSqFt / 1220;
-  const triBigha = triAreaInSqFt / 24400;
+  const triBiswa = triAreaInSqFt / SQFT_PER_BISWA;
+  const triBigha = triAreaInSqFt / SQFT_PER_BIGHA;
 
   return (
     <div className={`border rounded-2xl overflow-hidden shadow-sm transition-colors duration-300 ${
@@ -103,14 +113,14 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
               {t.methodTitle}
             </h3>
             <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-              {method === 'triangular' ? `📐 ${t.methodTriangularMode}` : `🌾 ${t.methodAverageMode}`}
+              {shownMethod === 'triangular' ? `📐 ${t.methodTriangularMode}` : `🌾 ${t.methodAverageMode}`}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider hidden sm:inline-block bg-amber-500/10 text-amber-800 dark:text-amber-300">
-            {method === 'triangular' ? t.diagonalBadge : t.averageBadge}
+            {shownMethod === 'triangular' ? t.diagonalBadge : t.averageBadge}
           </span>
           <button className={`p-1 ${darkMode ? 'text-stone-400 hover:text-stone-100' : 'text-stone-500 hover:text-stone-700'}`}>
             {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -121,7 +131,19 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
       {/* Accordion Content */}
       {isOpen && (
         <div className={`p-5 space-y-4 animate-slideDown ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
-          {method === 'average' ? (
+          {isFallback && (
+            <div
+              role="alert"
+              className={`p-3 rounded-xl border text-[11px] leading-relaxed font-semibold ${
+                darkMode
+                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-200'
+                  : 'bg-amber-50 border-amber-300 text-amber-900'
+              }`}
+            >
+              ⚠ {t.fallbackNote}
+            </div>
+          )}
+          {shownMethod === 'average' ? (
             <div className="space-y-4">
               <p className="text-xs leading-relaxed">
                 {t.averageMethodDesc}

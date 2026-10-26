@@ -15,6 +15,7 @@ import HistoryList from './components/HistoryList';
 import ReportModal from './components/ReportModal';
 import GuideModal from './components/GuideModal';
 import { calculateAverageArea, calculateTriangularArea } from './geometryUtils';
+import { SQFT_PER_BISWA, SQFT_PER_BIGHA, SQFT_PER_ACRE } from './units';
 import { Calculator, Users, History, Compass, Ruler } from 'lucide-react';
 import { translations, Language } from './locales';
 import SarvguniyaMeasurer from './components/SarvguniyaMeasurer';
@@ -119,10 +120,32 @@ export default function App() {
 
   const areaInSqFt = getAreaInSqFt();
 
-  // Standard Indian local converters
-  const biswa = areaInSqFt / 1220;
-  const bigha = areaInSqFt / 24400;
-  const acre = areaInSqFt / 43560;
+  // Standard Indian local converters (factors come from src/units.ts -> LAND_UNITS)
+  const biswa = areaInSqFt / SQFT_PER_BISWA;
+  const bigha = areaInSqFt / SQFT_PER_BIGHA;
+  const acre = areaInSqFt / SQFT_PER_ACRE;
+
+  // --- Method integrity -------------------------------------------------------
+  // The method above is only *requested*. If the diagonal cannot form real triangles,
+  // getCalculatedAreaInUnit() silently returns the Village Average value, so the UI
+  // must not keep claiming "Exact Triangular".
+  const triangularArea = calculateTriangularArea(dimensions);
+  const averageArea = calculateAverageArea(dimensions);
+  const isFallback = method === 'triangular' && triangularArea <= 0;
+
+  // A diagonal that is mathematically possible but wildly inconsistent with the four
+  // sides describes a completely different plot. Flag it instead of trusting it.
+  const diagonalMismatch =
+    method === 'triangular' &&
+    triangularArea > 0 &&
+    averageArea > 0 &&
+    Math.abs(triangularArea - averageArea) / averageArea > 0.25;
+
+  // Diagonal implied by the four sides, used only for the hint text.
+  const idealDiagonal = Math.hypot(
+    (dimensions.sideAB + dimensions.sideCD) / 2,
+    (dimensions.sideBC + dimensions.sideDA) / 2
+  );
 
   // Record Management Actions
   const handleSaveCurrent = (name: string) => {
@@ -301,6 +324,8 @@ export default function App() {
               darkMode={darkMode}
               language={language}
               t={t}
+              diagonalMismatch={diagonalMismatch}
+              idealDiagonal={idealDiagonal}
             />
             <MethodAccordion
               method={method}
@@ -309,6 +334,7 @@ export default function App() {
               darkMode={darkMode}
               language={language}
               t={t}
+              isFallback={isFallback}
             />
           </div>
 
@@ -344,21 +370,21 @@ export default function App() {
               <div className={`p-4 rounded-xl border text-center space-y-0.5 transition-colors duration-300 ${
                 darkMode ? 'bg-amber-500/10 border-amber-500/10' : 'bg-amber-50 border-amber-200/80'
               }`}>
-                <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.biswa} (बिस्वा)</span>
+                <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.biswa}</span>
                 <span className="text-2xl font-bold font-mono text-amber-950 dark:text-amber-300">{biswa.toFixed(2)}</span>
                 <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{t.northUPRegion}</span>
               </div>
               <div className={`p-4 rounded-xl border text-center space-y-0.5 transition-colors duration-300 ${
                 darkMode ? 'bg-amber-500/10 border-amber-500/10' : 'bg-amber-50 border-amber-200/80'
               }`}>
-                <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.bigha} (बीघा)</span>
+                <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.bigha}</span>
                 <span className="text-2xl font-bold font-mono text-amber-950 dark:text-amber-300">{bigha.toFixed(2)}</span>
                 <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{t.standardRevenue}</span>
               </div>
               <div className={`p-3.5 rounded-xl border text-center space-y-0.5 col-span-2 flex items-center justify-between px-6 transition-colors duration-300 ${
                 darkMode ? 'bg-stone-900 border-stone-800' : 'bg-stone-50 border-stone-200'
               }`}>
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{t.acre} (एकड़)</span>
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{t.acre}</span>
                 <span className={`text-lg font-bold font-mono ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{acre.toFixed(3)}</span>
               </div>
             </div>
@@ -366,7 +392,7 @@ export default function App() {
             {/* Partition share calculations */}
             <SplitShares
               sharesCount={sharesCount}
-              areaInSqFt={calculatedAreaInUnit}
+              areaInUnit={calculatedAreaInUnit}
               activeUnitLabel={getUnitSuffix()}
               onSharesChanged={setSharesCount}
               darkMode={darkMode}
@@ -429,6 +455,8 @@ export default function App() {
                   darkMode={darkMode}
                   language={language}
                   t={t}
+                  diagonalMismatch={diagonalMismatch}
+                  idealDiagonal={idealDiagonal}
                 />
 
                 <MethodAccordion
@@ -438,6 +466,7 @@ export default function App() {
                   darkMode={darkMode}
                   language={language}
                   t={t}
+                  isFallback={isFallback}
                 />
 
                 {/* Mobile Primary Result Box */}
@@ -463,13 +492,13 @@ export default function App() {
                   <div className={`p-3 rounded-xl border text-center transition-colors duration-300 ${
                     darkMode ? 'bg-amber-500/10 border-amber-500/10' : 'bg-amber-50 border-amber-200/80'
                   }`}>
-                    <span className="text-[9px] font-bold text-amber-900 dark:text-amber-400 uppercase block">{t.biswa} (बिस्वा)</span>
+                    <span className="text-[9px] font-bold text-amber-900 dark:text-amber-400 uppercase block">{t.biswa}</span>
                     <span className="text-lg font-bold font-mono text-amber-950 dark:text-amber-300">{biswa.toFixed(2)}</span>
                   </div>
                   <div className={`p-3 rounded-xl border text-center transition-colors duration-300 ${
                     darkMode ? 'bg-amber-500/10 border-amber-500/10' : 'bg-amber-50 border-amber-200/80'
                   }`}>
-                    <span className="text-[9px] font-bold text-amber-900 dark:text-amber-400 uppercase block">{t.bigha} (बीघा)</span>
+                    <span className="text-[9px] font-bold text-amber-900 dark:text-amber-400 uppercase block">{t.bigha}</span>
                     <span className="text-lg font-bold font-mono text-amber-950 dark:text-amber-300">{bigha.toFixed(2)}</span>
                   </div>
                 </div>
@@ -499,7 +528,7 @@ export default function App() {
 
                 <SplitShares
                   sharesCount={sharesCount}
-                  areaInSqFt={calculatedAreaInUnit}
+                  areaInUnit={calculatedAreaInUnit}
                   activeUnitLabel={getUnitSuffix()}
                   onSharesChanged={setSharesCount}
                   darkMode={darkMode}

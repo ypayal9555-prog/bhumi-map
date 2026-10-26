@@ -8,6 +8,7 @@ import { motion } from 'motion/react';
 import { DimensionValues, MeasuringUnit, CalculationMethod, LAND_UNITS } from '../types';
 import { Printer, X, Award, FileSpreadsheet, Share2, Copy, Check, Send } from 'lucide-react';
 import { getCoordinatesFromDimensions } from '../geometryUtils';
+import { SQFT_PER_BISWA, SQFT_PER_BIGHA, SQFT_PER_ACRE } from '../units';
 import { Language } from '../locales';
 
 interface ReportModalProps {
@@ -63,9 +64,9 @@ export default function ReportModal({
   };
 
   const getShareText = () => {
-    const biswaVal = areaInSqFt / 1220;
-    const bighaVal = areaInSqFt / 24400;
-    const acreVal = areaInSqFt / 43560;
+    const biswaVal = areaInSqFt / SQFT_PER_BISWA;
+    const bighaVal = areaInSqFt / SQFT_PER_BIGHA;
+    const acreVal = areaInSqFt / SQFT_PER_ACRE;
     const unitSuffix = getUnitSuffix();
     const unitLabel = getUnitLabel();
     

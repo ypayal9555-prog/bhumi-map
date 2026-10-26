@@ -6,7 +6,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Point, DimensionValues, MeasuringUnit } from '../types';
-import { getDistance, getCoordinatesFromDimensions } from '../geometryUtils';
+import { getDistance, getCoordinatesFromDimensions, isPlottable } from '../geometryUtils';
 import { RotateCcw, HelpCircle, Move, X } from 'lucide-react';
 
 interface PlotCanvasProps {
@@ -119,9 +119,9 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
   };
 
   const getUnitSuffix = () => {
-    if (unit === 'feet') return 'ft';
-    if (unit === 'links') return 'ln';
-    return 'lat';
+    if (unit === 'links') return t.shortLinks;
+    if (unit === 'lattha') return t.shortLattha;
+    return t.shortFeet;
   };
 
   const pA = points.find((p) => p.id === 'A');
@@ -142,6 +142,11 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
   const midBD = getMidpoint(pB, pD);
 
   const suffix = getUnitSuffix();
+
+  // If the numbers cannot form a closed quadrilateral, drawing a placeholder outline
+  // would show a shape that has nothing to do with the typed values. Show an
+  // explanation instead.
+  const drawable = isPlottable(dimensions);
 
   return (
     <div className={`border rounded-2xl overflow-hidden shadow-sm flex flex-col relative group transition-colors duration-300 ${
@@ -229,7 +234,7 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
           className="absolute inset-0 w-full h-full drop-shadow-sm select-none"
           viewBox="0 0 400 300"
         >
-          {pA && pB && pC && pD && (
+          {drawable && pA && pB && pC && pD && (
             <>
               {/* Outer Polygon Shade */}
               <polygon
@@ -295,7 +300,7 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
                 <g transform={`translate(${midBD.x}, ${midBD.y})`}>
                   <rect x="-30" y="-10" width="60" height="16" rx="4" fill={darkMode ? "#451a03" : "#fef3c7"} stroke={darkMode ? "#78350f" : "#fcd34d"} strokeWidth="1" />
                   <text fill={darkMode ? "#fde047" : "#b45309"} fontSize="9" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
-                    Diag {dimensions.diagonalBD}
+                    {t.diagShort} {dimensions.diagonalBD}
                     {suffix}
                   </text>
                 </g>
@@ -338,11 +343,32 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
           )}
         </svg>
 
+        {/* Cannot-draw state: replaces the plot instead of showing a placeholder shape */}
+        {!drawable && (
+          <div
+            className={`absolute inset-0 flex items-center justify-center p-6 ${
+              darkMode ? 'bg-stone-950/90' : 'bg-white/90'
+            }`}
+          >
+            <div className="text-center max-w-[260px]">
+              <div className="mx-auto mb-2 w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-600">
+                <X className="w-5 h-5" />
+              </div>
+              <p className={`text-sm font-bold mb-1 ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
+                {t.cannotDrawTitle}
+              </p>
+              <p className={`text-[11px] leading-relaxed ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
+                {t.cannotDrawBody}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Live Geometry Badge */}
         <div className={`absolute bottom-4 right-4 backdrop-blur-md px-3 py-1.5 rounded-full border shadow-sm flex items-center gap-2 transition-colors ${
           darkMode ? 'bg-stone-900/90 border-stone-800' : 'bg-white/90 border-stone-200'
         }`}>
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${drawable ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
           <span className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>{t.liveGeometry}</span>
         </div>
       </div>

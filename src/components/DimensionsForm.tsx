@@ -15,6 +15,10 @@ interface DimensionsFormProps {
   darkMode: boolean;
   language: Language;
   t: any;
+  /** True when the typed diagonal describes a noticeably different plot than the four sides do. */
+  diagonalMismatch?: boolean;
+  /** Diagonal implied by the four sides (used in the mismatch hint). */
+  idealDiagonal?: number;
 }
 
 export default function DimensionsForm({
@@ -24,11 +28,19 @@ export default function DimensionsForm({
   darkMode,
   language,
   t,
+  diagonalMismatch = false,
+  idealDiagonal = 0,
 }: DimensionsFormProps) {
   const getUnitName = () => {
-    if (unit === 'feet') return t.feetDesc ? 'Feet' : 'Feet';
-    if (unit === 'links') return 'Links';
-    return 'Lattha';
+    if (unit === 'links') return t.unitLinks;
+    if (unit === 'lattha') return t.unitLattha;
+    return t.unitFeet;
+  };
+
+  const getLengthSuffix = () => {
+    if (unit === 'links') return t.shortLinks;
+    if (unit === 'lattha') return t.shortLattha;
+    return t.shortFeet;
   };
 
   const handleInputChange = (field: keyof DimensionValues, valueStr: string) => {
@@ -214,6 +226,26 @@ export default function DimensionsForm({
           <p className={`text-[10px] ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
             {t.precisionNotice}
           </p>
+
+          {diagonalMismatch && (
+            <div
+              role="alert"
+              className={`mt-2 p-3 rounded-xl border text-[11px] leading-relaxed ${
+                darkMode
+                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-200'
+                  : 'bg-amber-50 border-amber-300 text-amber-900'
+              }`}
+            >
+              <p className="font-bold mb-0.5">⚠ {t.diagonalMismatchTitle}</p>
+              <p>
+                {t.diagonalMismatchBody}{' '}
+                <span className="font-mono font-bold">
+                  ≈ {idealDiagonal.toFixed(1)} {getLengthSuffix()}
+                </span>
+                . {t.diagonalMismatchHint}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
