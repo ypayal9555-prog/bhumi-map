@@ -57,8 +57,8 @@ const LOCAL_TXT = {
     title: 'सर्वगुनिया ज़मीन मापक',
     subtitle: 'नक्शा एवं सीधी ज़मीन मापक (गुनिया, फीता, कड़ी स्केल)',
     modeLabel: 'नापने का तरीका (Measurement Mode):',
-    modeMap: '🗺️ नक्शे से नाप (गुनिया/स्केल)',
-    modeGround: '⛰️ सीधी ज़मीन नाप (फ़ीता/कड़ी/टेप)',
+    modeMap: 'नक्शे से नाप (गुनिया/स्केल)',
+    modeGround: 'सीधी ज़मीन नाप (फ़ीता/कड़ी/टेप)',
     scaleLabel: 'नक्शे का पैमाना (Map Scale):',
     scaleSelectType: 'पैमाने का प्रकार:',
     scaleMetric: '1/4000 (मीट्रिक)',
@@ -67,7 +67,7 @@ const LOCAL_TXT = {
     scale16: '16 इंच = 1 मील (खेत)',
     scale32: '32 इंच = 1 मील (आबादी)',
     instLabel: 'नापने का औज़ार (Survey Instrument):',
-    sidesTitle: '📐 चारों भुजाएँ दर्ज करें',
+    sidesTitle: 'चारों भुजाएँ दर्ज करें',
     phAB: 'भुजा AB (पूर्व)',
     phBC: 'भुजा BC (उत्तर)',
     phCD: 'भुजा CD (पश्चिम)',
@@ -75,10 +75,10 @@ const LOCAL_TXT = {
     btnReset: 'रीसेट करें',
     btnCalc: 'मापन करें',
     footer: `1 बिस्वा = ${BISWA_SQFT_LABEL} वर्ग फीट • ${BISWA_PER_BIGHA} बिस्वा = 1 बीघा • विलेज अमीन फॉर्मूला`,
-    distTitle: '📏 ज़मीन पर वास्तविक दूरी (Actual Lengths)',
-    avgTitle: '🔢 औसत गणना (Village Average)',
-    areaTitle: '📐 कुल क्षेत्रफल (Total Area)',
-    localTitle: '🏡 क्षेत्रीय भूमि रिकॉर्ड (Local Land Units)',
+    distTitle: 'ज़मीन पर वास्तविक दूरी (Actual Lengths)',
+    avgTitle: 'औसत गणना (Village Average)',
+    areaTitle: 'कुल क्षेत्रफल (Total Area)',
+    localTitle: 'क्षेत्रीय भूमि रिकॉर्ड (Local Land Units)',
     east: 'पूर्व',
     north: 'उत्तर',
     west: 'पश्चिम',
@@ -125,8 +125,8 @@ const LOCAL_TXT = {
     title: 'Sarvguniya Land Measurer',
     subtitle: 'Map & Direct Ground Calculator (Guniya, Tape, Chain scale)',
     modeLabel: 'Measurement Mode:',
-    modeMap: '🗺️ Map Survey (Guniya/Scale)',
-    modeGround: '⛰️ Direct Ground (Tape/Chain)',
+    modeMap: 'Map Survey (Guniya/Scale)',
+    modeGround: 'Direct Ground (Tape/Chain)',
     scaleLabel: 'Map Scale:',
     scaleSelectType: 'Scale Type:',
     scaleMetric: '1/4000 (Metric)',
@@ -135,7 +135,7 @@ const LOCAL_TXT = {
     scale16: '16 Inch = 1 Mile (Fields)',
     scale32: '32 Inch = 1 Mile (Habitation)',
     instLabel: 'Survey Instrument:',
-    sidesTitle: '📐 Enter Four Sides',
+    sidesTitle: 'Enter Four Sides',
     phAB: 'Side AB (East)',
     phBC: 'Side BC (North)',
     phCD: 'Side CD (West)',
@@ -143,10 +143,10 @@ const LOCAL_TXT = {
     btnReset: 'Reset',
     btnCalc: 'Calculate',
     footer: `1 Biswa = ${BISWA_SQFT_LABEL} sq ft • ${BISWA_PER_BIGHA} Biswa = 1 Bigha • Village Amin Formula`,
-    distTitle: '📏 Converted Ground Distances',
-    avgTitle: '🔢 Opposite Side Averages',
-    areaTitle: '📐 Total Area Outlines',
-    localTitle: '🏡 Regional Revenue Conversion',
+    distTitle: 'Converted Ground Distances',
+    avgTitle: 'Opposite Side Averages',
+    areaTitle: 'Total Area Outlines',
+    localTitle: 'Regional Revenue Conversion',
     east: 'East',
     north: 'North',
     west: 'West',
@@ -452,7 +452,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
         darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
       }`}>
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600">
+          <div className="p-2.5 rounded-xl bg-brand-500/10 text-brand-600">
             <Compass className="w-5 h-5 animate-spin-slow" />
           </div>
           <div>
@@ -471,7 +471,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
             darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
           }`}>
             <div className="flex items-center gap-2 border-b pb-3 border-stone-250 dark:border-stone-800">
-              <Settings className="w-4 h-4 text-amber-600" />
+              <Settings className="w-4 h-4 text-brand-600" />
               <span className="text-xs font-bold uppercase tracking-wider">{language === 'hi' ? 'सेटिंग्स' : 'Configuration'}</span>
             </div>
 
@@ -483,25 +483,25 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                   onClick={() => setMode('map')}
                   className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                     mode === 'map'
-                      ? 'bg-amber-600 text-white border-amber-600'
+                      ? 'bg-brand-600 text-white border-brand-600'
                       : darkMode
                         ? 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                         : 'bg-stone-50 border-stone-200 text-stone-600 hover:text-stone-800'
                   }`}
                 >
-                  {language === 'hi' ? '🗺️ नक्शे से' : '🗺️ Map'}
+                  {language === 'hi' ? 'नक्शे से' : 'Map'}
                 </button>
                 <button
                   onClick={() => setMode('ground')}
                   className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                     mode === 'ground'
-                      ? 'bg-amber-600 text-white border-amber-600'
+                      ? 'bg-brand-600 text-white border-brand-600'
                       : darkMode
                         ? 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                         : 'bg-stone-50 border-stone-200 text-stone-600 hover:text-stone-800'
                   }`}
                 >
-                  {language === 'hi' ? '⛰️ सीधी ज़मीन' : '⛰️ Tape/Chain'}
+                  {language === 'hi' ? 'सीधी ज़मीन' : 'Tape/Chain'}
                 </button>
               </div>
             </div>
@@ -524,7 +524,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                       }}
                       className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer flex items-center justify-center ${
                         primaryScale === 'metric'
-                          ? 'bg-amber-600 text-white border-amber-600 animate-press'
+                          ? 'bg-brand-600 text-white border-brand-600 animate-press'
                           : darkMode
                             ? 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                             : 'bg-stone-50 border-stone-200 text-stone-600 hover:text-stone-800'
@@ -547,7 +547,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                         }}
                         className={`w-full py-2.5 pl-3 pr-8 rounded-xl text-xs font-bold border outline-none cursor-pointer appearance-none transition-all ${
                           primaryScale === 'traditional'
-                            ? 'bg-amber-600 text-white border-amber-600 font-bold'
+                            ? 'bg-brand-600 text-white border-brand-600 font-bold'
                             : darkMode
                               ? 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                               : 'bg-stone-50 border-stone-200 text-stone-600 hover:text-stone-800'
@@ -592,8 +592,8 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                 onChange={(e) => setInstrument(e.target.value)}
                 className={`w-full p-2.5 rounded-xl border text-xs font-bold outline-none cursor-pointer transition-colors ${
                   darkMode 
-                    ? 'bg-stone-950 border-stone-800 text-stone-200 focus:border-amber-600' 
-                    : 'bg-stone-50 border-stone-250 text-stone-800 focus:border-amber-600'
+                    ? 'bg-stone-950 border-stone-800 text-stone-200 focus:border-brand-600' 
+                    : 'bg-stone-50 border-stone-250 text-stone-800 focus:border-brand-600'
                 }`}
               >
                 {mode === 'map' ? (
@@ -635,7 +635,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
             darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
           }`}>
             <div className="flex items-center gap-2 border-b pb-3 border-stone-250 dark:border-stone-800">
-              <Ruler className="w-4 h-4 text-amber-600 animate-pulse" />
+              <Ruler className="w-4 h-4 text-brand-600 animate-pulse" />
               <span className="text-xs font-bold uppercase tracking-wider">{t.sidesTitle}</span>
             </div>
 
@@ -650,12 +650,12 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                     placeholder={t.phAB}
                     className={`w-full pl-3 pr-16 py-2.5 rounded-xl border text-sm font-semibold outline-none transition-colors ${
                       darkMode 
-                        ? 'bg-stone-950 border-stone-850 text-stone-100 placeholder-stone-600 focus:border-amber-600' 
-                        : 'bg-stone-50 border-stone-200 text-stone-900 placeholder-stone-400 focus:border-amber-600'
+                        ? 'bg-stone-950 border-stone-850 text-stone-100 placeholder-stone-600 focus:border-brand-600' 
+                        : 'bg-stone-50 border-stone-200 text-stone-900 placeholder-stone-400 focus:border-brand-600'
                     }`}
                   />
                   <span className={`absolute right-3.5 top-2.5 text-[10px] font-bold uppercase tracking-wider ${
-                    darkMode ? 'text-amber-500/80' : 'text-amber-700/80'
+                    darkMode ? 'text-brand-500/80' : 'text-brand-700/80'
                   }`}>
                     {getUnitName(instrument)}
                   </span>
@@ -672,12 +672,12 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                     placeholder={t.phBC}
                     className={`w-full pl-3 pr-16 py-2.5 rounded-xl border text-sm font-semibold outline-none transition-colors ${
                       darkMode 
-                        ? 'bg-stone-950 border-stone-850 text-stone-100 placeholder-stone-600 focus:border-amber-600' 
-                        : 'bg-stone-50 border-stone-200 text-stone-900 placeholder-stone-400 focus:border-amber-600'
+                        ? 'bg-stone-950 border-stone-850 text-stone-100 placeholder-stone-600 focus:border-brand-600' 
+                        : 'bg-stone-50 border-stone-200 text-stone-900 placeholder-stone-400 focus:border-brand-600'
                     }`}
                   />
                   <span className={`absolute right-3.5 top-2.5 text-[10px] font-bold uppercase tracking-wider ${
-                    darkMode ? 'text-amber-500/80' : 'text-amber-700/80'
+                    darkMode ? 'text-brand-500/80' : 'text-brand-700/80'
                   }`}>
                     {getUnitName(instrument)}
                   </span>
@@ -694,12 +694,12 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                     placeholder={t.phCD}
                     className={`w-full pl-3 pr-16 py-2.5 rounded-xl border text-sm font-semibold outline-none transition-colors ${
                       darkMode 
-                        ? 'bg-stone-950 border-stone-850 text-stone-100 placeholder-stone-600 focus:border-amber-600' 
-                        : 'bg-stone-50 border-stone-200 text-stone-900 placeholder-stone-400 focus:border-amber-600'
+                        ? 'bg-stone-950 border-stone-850 text-stone-100 placeholder-stone-600 focus:border-brand-600' 
+                        : 'bg-stone-50 border-stone-200 text-stone-900 placeholder-stone-400 focus:border-brand-600'
                     }`}
                   />
                   <span className={`absolute right-3.5 top-2.5 text-[10px] font-bold uppercase tracking-wider ${
-                    darkMode ? 'text-amber-500/80' : 'text-amber-700/80'
+                    darkMode ? 'text-brand-500/80' : 'text-brand-700/80'
                   }`}>
                     {getUnitName(instrument)}
                   </span>
@@ -716,12 +716,12 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                     placeholder={t.phDA}
                     className={`w-full pl-3 pr-16 py-2.5 rounded-xl border text-sm font-semibold outline-none transition-colors ${
                       darkMode 
-                        ? 'bg-stone-950 border-stone-850 text-stone-100 placeholder-stone-600 focus:border-amber-600' 
-                        : 'bg-stone-50 border-stone-200 text-stone-900 placeholder-stone-400 focus:border-amber-600'
+                        ? 'bg-stone-950 border-stone-850 text-stone-100 placeholder-stone-600 focus:border-brand-600' 
+                        : 'bg-stone-50 border-stone-200 text-stone-900 placeholder-stone-400 focus:border-brand-600'
                     }`}
                   />
                   <span className={`absolute right-3.5 top-2.5 text-[10px] font-bold uppercase tracking-wider ${
-                    darkMode ? 'text-amber-500/80' : 'text-amber-700/80'
+                    darkMode ? 'text-brand-500/80' : 'text-brand-700/80'
                   }`}>
                     {getUnitName(instrument)}
                   </span>
@@ -747,7 +747,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={handleCalculate}
-                className="py-2 px-4 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer select-none shadow-sm shadow-amber-600/15"
+                className="py-2 px-4 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer select-none shadow-sm shadow-brand-600/15"
               >
                 <Calculator className="w-3.5 h-3.5" />
                 <span>{t.btnCalc}</span>
@@ -770,14 +770,14 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                 <div className={`p-10 rounded-3xl border text-center space-y-3 transition-all duration-300 ${
                   darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
                 }`}>
-                  <div className="w-12 h-12 rounded-full bg-amber-500/10 text-amber-600 flex items-center justify-center mx-auto mb-2">
+                  <div className="w-12 h-12 rounded-full bg-brand-500/10 text-brand-600 flex items-center justify-center mx-auto mb-2">
                     <Ruler className="w-6 h-6" />
                   </div>
                   <h3 className="text-sm font-bold">{t.noSidesMsg}</h3>
                   <p className="text-xs text-stone-500 max-w-sm mx-auto">{t.incompleteMsg}</p>
                   
                   <div className="pt-4 max-w-xs mx-auto border-t border-stone-250 dark:border-stone-800">
-                    <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest block mb-1">
+                    <span className="text-[10px] font-bold text-brand-600 uppercase tracking-widest block mb-1">
                       {t.scaleCardTitle}
                     </span>
                     <p className="text-[10px] text-stone-400">
@@ -820,7 +820,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                   darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
                 }`}>
                   <div className="flex items-center gap-2 border-b pb-3 border-stone-250 dark:border-stone-800">
-                    <Compass className="w-4 h-4 text-amber-600" />
+                    <Compass className="w-4 h-4 text-brand-600" />
                     <span className="text-xs font-bold uppercase tracking-wider">{t.distTitle}</span>
                   </div>
 
@@ -833,7 +833,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                         }`}
                       >
                         <div className="flex items-center justify-between border-b pb-1.5 border-stone-200 dark:border-stone-850">
-                          <span className="text-[11px] font-bold text-amber-600 dark:text-amber-500">
+                          <span className="text-[11px] font-bold text-brand-600 dark:text-brand-500">
                             {language === 'hi' 
                               ? `भुजा ${sideKey} (${sideKey === 'AB' ? t.east : sideKey === 'BC' ? t.north : sideKey === 'CD' ? t.west : t.south})`
                               : `Side ${sideKey} (${sideKey === 'AB' ? t.east : sideKey === 'BC' ? t.north : sideKey === 'CD' ? t.west : t.south})`
@@ -864,7 +864,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                   </div>
 
                   {showIncomplete && !results.isComplete && (
-                    <div className="bg-amber-600/10 p-3 rounded-xl border border-amber-600/20 text-[11px] text-amber-700 dark:text-amber-400 text-center font-medium">
+                    <div className="bg-brand-600/10 p-3 rounded-xl border border-brand-600/20 text-[11px] text-brand-700 dark:text-brand-400 text-center font-medium">
                       {t.incompleteMsg}
                     </div>
                   )}
@@ -878,7 +878,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                       darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
                     }`}>
                       <div className="flex items-center gap-2 border-b pb-3 border-stone-250 dark:border-stone-800">
-                        <Layers className="w-4 h-4 text-amber-600" />
+                        <Layers className="w-4 h-4 text-brand-600" />
                         <span className="text-xs font-bold uppercase tracking-wider">{t.avgTitle}</span>
                       </div>
 
@@ -914,7 +914,7 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                       darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
                     }`}>
                       <div className="flex items-center gap-2 border-b pb-3 border-stone-250 dark:border-stone-800">
-                        <TrendingUp className="w-4 h-4 text-amber-600" />
+                        <TrendingUp className="w-4 h-4 text-brand-600" />
                         <span className="text-xs font-bold uppercase tracking-wider">{t.areaTitle}</span>
                       </div>
 
@@ -1004,24 +1004,24 @@ export default function SarvguniyaMeasurer({ darkMode, language, onDataChange }:
                       darkMode ? 'bg-stone-900 border-stone-800 animate-fadeIn' : 'bg-white border-stone-200 animate-fadeIn'
                     }`}>
                       <div className="flex items-center gap-2 border-b pb-3 border-stone-250 dark:border-stone-800">
-                        <Layers className="w-4 h-4 text-amber-600" />
+                        <Layers className="w-4 h-4 text-brand-600" />
                         <span className="text-xs font-bold uppercase tracking-wider">{t.localTitle}</span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className={`p-4 rounded-xl border text-center space-y-1 transition-colors duration-300 ${
-                          darkMode ? 'bg-amber-500/10 border-amber-500/15' : 'bg-amber-50 border-amber-200/80'
+                          darkMode ? 'bg-brand-500/10 border-brand-500/15' : 'bg-brand-50 border-brand-200/80'
                         }`}>
-                          <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.biswa}</span>
-                          <span className="text-2xl font-bold font-mono text-amber-950 dark:text-amber-300">{results.area.biswa.toFixed(2)}</span>
+                          <span className="text-[10px] font-bold text-brand-900 dark:text-brand-400 uppercase tracking-widest block">{t.biswa}</span>
+                          <span className="text-2xl font-bold font-mono text-brand-950 dark:text-brand-300">{results.area.biswa.toFixed(2)}</span>
                           <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{language === 'hi' ? `${BISWA_SQFT_LABEL} वर्ग फीट` : `${BISWA_SQFT_LABEL} sq ft`}</span>
                         </div>
 
                         <div className={`p-4 rounded-xl border text-center space-y-1 transition-colors duration-300 ${
-                          darkMode ? 'bg-amber-500/10 border-amber-500/15' : 'bg-amber-50 border-amber-200/80'
+                          darkMode ? 'bg-brand-500/10 border-brand-500/15' : 'bg-brand-50 border-brand-200/80'
                         }`}>
-                          <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.bigha}</span>
-                          <span className="text-2xl font-bold font-mono text-amber-950 dark:text-amber-300">{results.area.bigha.toFixed(3)}</span>
+                          <span className="text-[10px] font-bold text-brand-900 dark:text-brand-400 uppercase tracking-widest block">{t.bigha}</span>
+                          <span className="text-2xl font-bold font-mono text-brand-950 dark:text-brand-300">{results.area.bigha.toFixed(3)}</span>
                           <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{language === 'hi' ? `${BISWA_PER_BIGHA} बिस्वा` : `${BISWA_PER_BIGHA} Biswa`}</span>
                         </div>
                       </div>

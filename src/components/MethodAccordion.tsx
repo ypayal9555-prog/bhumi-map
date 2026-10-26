@@ -111,21 +111,21 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
         onClick={toggleAccordion}
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-700 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-700 dark:text-brand-300 shrink-0">
             <BookOpen className="w-4 h-4" />
           </div>
           <div>
             <h3 className={`text-sm font-bold ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
               {t.methodTitle}
             </h3>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-              {shownMethod === 'triangular' ? `📐 ${t.methodTriangularMode}` : `🌾 ${t.methodAverageMode}`}
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+              {shownMethod === 'triangular' ? t.methodTriangularMode : t.methodAverageMode}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider hidden sm:inline-block bg-amber-500/10 text-amber-800 dark:text-amber-300">
+          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider hidden sm:inline-block bg-brand-500/10 text-brand-800 dark:text-brand-300">
             {shownMethod === 'triangular' ? t.diagonalBadge : t.averageBadge}
           </span>
           <button className={`p-1 ${darkMode ? 'text-stone-400 hover:text-stone-100' : 'text-stone-500 hover:text-stone-700'}`}>
@@ -142,8 +142,8 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
               role="alert"
               className={`p-3 rounded-xl border text-[11px] leading-relaxed font-semibold ${
                 darkMode
-                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-200'
-                  : 'bg-amber-50 border-amber-300 text-amber-900'
+                  ? 'bg-warn-500/10 border-warn-500/35 text-warn-200'
+                  : 'bg-warn-50 border-warn-300 text-warn-900'
               }`}
             >
               ⚠ {t.fallbackNote}
@@ -157,7 +157,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
               
               {/* Formula Panel */}
               <div className={`p-3 rounded-xl font-mono text-xs font-bold ${
-                darkMode ? 'bg-stone-950 text-amber-400' : 'bg-amber-500/5 text-amber-900 border border-amber-500/10'
+                darkMode ? 'bg-stone-950 text-brand-400' : 'bg-brand-500/5 text-brand-900 border border-brand-500/10'
               }`}>
                 {t.averageFormula}
               </div>
@@ -171,7 +171,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                 {/* Step 1: Average Width */}
                 <div className={`p-3.5 rounded-xl border ${darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">1</span>
+                    <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">1</span>
                     <span className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>
                       {t.stepAverageWidthTitle}
                     </span>
@@ -179,7 +179,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                   <div className="font-mono text-xs space-y-1 pl-7">
                     <p className="opacity-70">{t.formulaLabel}: (AB + CD) ÷ 2</p>
                     <p className="font-bold text-sm">
-                      ({sideAB} + {sideCD}) ÷ 2 = <span className="text-amber-600 dark:text-amber-400">{avgWidth.toFixed(2)} {unit === 'feet' ? t.unitFeetLabel : unit === 'links' ? t.unitLinksLabel : t.unitLatthaLabel}</span>
+                      ({sideAB} + {sideCD}) ÷ 2 = <span className="text-brand-600 dark:text-brand-400">{avgWidth.toFixed(2)} {unit === 'feet' ? t.unitFeetLabel : unit === 'links' ? t.unitLinksLabel : t.unitLatthaLabel}</span>
                     </p>
                   </div>
                 </div>
@@ -187,7 +187,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                 {/* Step 2: Average Height */}
                 <div className={`p-3.5 rounded-xl border ${darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">2</span>
+                    <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">2</span>
                     <span className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>
                       {t.stepAverageHeightTitle}
                     </span>
@@ -195,7 +195,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                   <div className="font-mono text-xs space-y-1 pl-7">
                     <p className="opacity-70">{t.formulaLabel}: (BC + DA) ÷ 2</p>
                     <p className="font-bold text-sm">
-                      ({sideBC} + {sideDA}) ÷ 2 = <span className="text-amber-600 dark:text-amber-400">{avgHeight.toFixed(2)} {unit === 'feet' ? t.unitFeetLabel : unit === 'links' ? t.unitLinksLabel : t.unitLatthaLabel}</span>
+                      ({sideBC} + {sideDA}) ÷ 2 = <span className="text-brand-600 dark:text-brand-400">{avgHeight.toFixed(2)} {unit === 'feet' ? t.unitFeetLabel : unit === 'links' ? t.unitLinksLabel : t.unitLatthaLabel}</span>
                     </p>
                   </div>
                 </div>
@@ -203,7 +203,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                 {/* Step 3: Area in Selected Unit */}
                 <div className={`p-3.5 rounded-xl border ${darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">3</span>
+                    <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">3</span>
                     <span className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>
                       {t.stepCalculatedAreaTitle}
                     </span>
@@ -211,7 +211,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                   <div className="font-mono text-xs space-y-1 pl-7">
                     <p className="opacity-70">{t.formulaLabel}: {t.stepAverageWidthTitle} × {t.stepAverageHeightTitle}</p>
                     <p className="font-bold text-sm">
-                      {avgWidth.toFixed(2)} × {avgHeight.toFixed(2)} = <span className="text-amber-600 dark:text-amber-400">{avgAreaInUnit.toLocaleString(undefined, { maximumFractionDigits: 2 })} {unitSuffix}</span>
+                      {avgWidth.toFixed(2)} × {avgHeight.toFixed(2)} = <span className="text-brand-600 dark:text-brand-400">{avgAreaInUnit.toLocaleString(undefined, { maximumFractionDigits: 2 })} {unitSuffix}</span>
                     </p>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                 {unit !== 'feet' && (
                   <div className={`p-3.5 rounded-xl border ${darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">4</span>
+                      <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">4</span>
                       <span className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>
                         {t.convertToSqFtTitle}
                       </span>
@@ -228,7 +228,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                     <div className="font-mono text-xs space-y-1 pl-7">
                       <p className="opacity-70">{factorExpression}</p>
                       <p className="font-bold text-sm">
-                        {avgAreaInUnit.toFixed(2)} × {factor} = <span className="text-amber-600 dark:text-amber-400">{avgAreaInSqFt.toLocaleString(undefined, { maximumFractionDigits: 2 })} {isHi ? 'वर्ग फुट' : 'sq ft'}</span>
+                        {avgAreaInUnit.toFixed(2)} × {factor} = <span className="text-brand-600 dark:text-brand-400">{avgAreaInSqFt.toLocaleString(undefined, { maximumFractionDigits: 2 })} {isHi ? 'वर्ग फुट' : 'sq ft'}</span>
                       </p>
                     </div>
                   </div>
@@ -237,7 +237,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                 {/* Step 5: Convert to Biswa */}
                 <div className={`p-3.5 rounded-xl border ${darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">
+                    <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">
                       {unit === 'feet' ? '4' : '5'}
                     </span>
                     <span className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>
@@ -249,7 +249,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                       {isHi ? `1 बिस्वा = ${BISWA_FMT} वर्ग फुट` : `1 Biswa = ${BISWA_FMT} Sq Ft`}
                     </p>
                     <p className="font-bold text-sm">
-                      {avgAreaInSqFt.toFixed(2)} ÷ {BISWA_FMT} = <span className="text-amber-600 dark:text-amber-400">{avgBiswa.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.biswa}</span>
+                      {avgAreaInSqFt.toFixed(2)} ÷ {BISWA_FMT} = <span className="text-brand-600 dark:text-brand-400">{avgBiswa.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.biswa}</span>
                     </p>
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                 {/* Step 6: Convert to Bigha */}
                 <div className={`p-3.5 rounded-xl border ${darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">
+                    <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">
                       {unit === 'feet' ? '5' : '6'}
                     </span>
                     <span className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>
@@ -269,7 +269,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                       {isHi ? `1 बीघा = ${BISWA_PER_BIGHA_FMT} बिस्वा = ${BIGHA_FMT} वर्ग फुट` : `1 Bigha = ${BISWA_PER_BIGHA_FMT} Biswa = ${BIGHA_FMT} Sq Ft`}
                     </p>
                     <p className="font-bold text-sm">
-                      {avgAreaInSqFt.toFixed(2)} ÷ {BIGHA_FMT} = <span className="text-amber-600 dark:text-amber-400">{avgBigha.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.bigha}</span>
+                      {avgAreaInSqFt.toFixed(2)} ÷ {BIGHA_FMT} = <span className="text-brand-600 dark:text-brand-400">{avgBigha.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.bigha}</span>
                     </p>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
 
               {/* Formula Panel */}
               <div className={`p-3 rounded-xl font-mono text-xs space-y-1 ${
-                darkMode ? 'bg-stone-950 text-amber-400' : 'bg-amber-500/5 text-amber-950 border border-amber-500/10'
+                darkMode ? 'bg-stone-950 text-brand-400' : 'bg-brand-500/5 text-brand-950 border border-brand-500/10'
               }`}>
                 <p className="font-bold">{t.triangularFormula}</p>
                 <p className="text-[10px] opacity-80">{t.totalTriangularFormula}</p>
@@ -310,9 +310,9 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                     darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'
                   }`}>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">1</span>
-                      <span className={`text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400`}>
-                        🔺 {t.stepArea1Title}
+                      <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">1</span>
+                      <span className={`text-[11px] font-bold uppercase tracking-wider text-brand-800 dark:text-brand-400`}>
+                        {t.stepArea1Title}
                       </span>
                     </div>
                     <div className="font-mono text-xs space-y-1 pl-7 opacity-95">
@@ -322,7 +322,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                         {isHi ? 'क्षेत्रफल १' : 'Area1'} = √[s1 × (s1-a) × (s1-b) × (s1-c)] <br />
                         = √[{s1.toFixed(1)} × {(s1 - sideAB).toFixed(1)} × {(s1 - sideDA).toFixed(1)} × {(s1 - (diagonalBD || 0)).toFixed(1)}] <br />
                         = √[{(s1 * (s1 - sideAB) * (s1 - sideDA) * (s1 - (diagonalBD || 0))).toFixed(1)}] <br />
-                        = <span className="text-amber-600 dark:text-amber-400 font-bold text-sm">{triArea1.toLocaleString(undefined, { maximumFractionDigits: 2 })} {unitSuffix}</span>
+                        = <span className="text-brand-600 dark:text-brand-400 font-bold text-sm">{triArea1.toLocaleString(undefined, { maximumFractionDigits: 2 })} {unitSuffix}</span>
                       </p>
                     </div>
                   </div>
@@ -332,9 +332,9 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                     darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'
                   }`}>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">2</span>
-                      <span className={`text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400`}>
-                        🔺 {t.stepArea2Title}
+                      <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">2</span>
+                      <span className={`text-[11px] font-bold uppercase tracking-wider text-brand-800 dark:text-brand-400`}>
+                        {t.stepArea2Title}
                       </span>
                     </div>
                     <div className="font-mono text-xs space-y-1 pl-7 opacity-95">
@@ -344,7 +344,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                         {isHi ? 'क्षेत्रफल २' : 'Area2'} = √[s2 × (s2-a) × (s2-b) × (s2-c)] <br />
                         = √[{s2.toFixed(1)} × {(s2 - sideBC).toFixed(1)} × {(s2 - sideCD).toFixed(1)} × {(s2 - (diagonalBD || 0)).toFixed(1)}] <br />
                         = √[{(s2 * (s2 - sideBC) * (s2 - sideCD) * (s2 - (diagonalBD || 0))).toFixed(1)}] <br />
-                        = <span className="text-amber-600 dark:text-amber-400 font-bold text-sm">{triArea2.toLocaleString(undefined, { maximumFractionDigits: 2 })} {unitSuffix}</span>
+                        = <span className="text-brand-600 dark:text-brand-400 font-bold text-sm">{triArea2.toLocaleString(undefined, { maximumFractionDigits: 2 })} {unitSuffix}</span>
                       </p>
                     </div>
                   </div>
@@ -354,15 +354,15 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                     darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'
                   }`}>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">3</span>
-                      <span className={`text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400`}>
+                      <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">3</span>
+                      <span className={`text-[11px] font-bold uppercase tracking-wider text-brand-800 dark:text-brand-400`}>
                         {t.stepTotalAreaTitle}
                       </span>
                     </div>
                     <div className="font-mono text-xs space-y-1 pl-7 opacity-95">
                       <p className="opacity-70">{t.formulaLabel}: {isHi ? 'क्षेत्रफल १' : 'Area1'} + {isHi ? 'क्षेत्रफल २' : 'Area2'}</p>
                       <p className="font-bold text-sm">
-                        {triArea1.toFixed(2)} + {triArea2.toFixed(2)} = <span className="text-amber-600 dark:text-amber-400">{triTotalAreaInUnit.toLocaleString(undefined, { maximumFractionDigits: 2 })} {unitSuffix}</span>
+                        {triArea1.toFixed(2)} + {triArea2.toFixed(2)} = <span className="text-brand-600 dark:text-brand-400">{triTotalAreaInUnit.toLocaleString(undefined, { maximumFractionDigits: 2 })} {unitSuffix}</span>
                       </p>
                     </div>
                   </div>
@@ -373,15 +373,15 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                       darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'
                     }`}>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">4</span>
-                        <span className={`text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400`}>
+                        <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">4</span>
+                        <span className={`text-[11px] font-bold uppercase tracking-wider text-brand-800 dark:text-brand-400`}>
                           {t.convertToSqFtTitle}
                         </span>
                       </div>
                       <div className="font-mono text-xs space-y-1 pl-7 opacity-95">
                         <p className="opacity-70">{factorExpression}</p>
                         <p className="font-bold text-sm">
-                          {triTotalAreaInUnit.toFixed(2)} × {factor} = <span className="text-amber-600 dark:text-amber-400">{triAreaInSqFt.toLocaleString(undefined, { maximumFractionDigits: 2 })} {isHi ? 'वर्ग फुट' : 'sq ft'}</span>
+                          {triTotalAreaInUnit.toFixed(2)} × {factor} = <span className="text-brand-600 dark:text-brand-400">{triAreaInSqFt.toLocaleString(undefined, { maximumFractionDigits: 2 })} {isHi ? 'वर्ग फुट' : 'sq ft'}</span>
                         </p>
                       </div>
                     </div>
@@ -392,10 +392,10 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                     darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'
                   }`}>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">
+                      <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">
                         {unit === 'feet' ? '4' : '5'}
                       </span>
-                      <span className={`text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400`}>
+                      <span className={`text-[11px] font-bold uppercase tracking-wider text-brand-800 dark:text-brand-400`}>
                         {t.convertToBiswaTitle}
                       </span>
                     </div>
@@ -404,7 +404,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                         {isHi ? `1 बिस्वा = ${BISWA_FMT} वर्ग फुट` : `1 Biswa = ${BISWA_FMT} Sq Ft`}
                       </p>
                       <p className="font-bold text-sm">
-                        {triAreaInSqFt.toFixed(2)} ÷ {BISWA_FMT} = <span className="text-amber-600 dark:text-amber-400">{triBiswa.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.biswa}</span>
+                        {triAreaInSqFt.toFixed(2)} ÷ {BISWA_FMT} = <span className="text-brand-600 dark:text-brand-400">{triBiswa.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.biswa}</span>
                       </p>
                     </div>
                   </div>
@@ -414,10 +414,10 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                     darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-100'
                   }`}>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center text-[10px] font-bold text-amber-700">
+                      <span className="w-5 h-5 rounded-full bg-brand-500/15 flex items-center justify-center text-[10px] font-bold text-brand-700 dark:text-brand-300">
                         {unit === 'feet' ? '5' : '6'}
                       </span>
-                      <span className={`text-[11px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400`}>
+                      <span className={`text-[11px] font-bold uppercase tracking-wider text-brand-800 dark:text-brand-400`}>
                         {t.convertToBighaTitle}
                       </span>
                     </div>
@@ -426,7 +426,7 @@ export default function MethodAccordion({ method, dimensions, unit, darkMode, la
                         {isHi ? `1 बीघा = ${BISWA_PER_BIGHA_FMT} बिस्वा = ${BIGHA_FMT} वर्ग फुट` : `1 Bigha = ${BISWA_PER_BIGHA_FMT} Biswa = ${BIGHA_FMT} Sq Ft`}
                       </p>
                       <p className="font-bold text-sm">
-                        {triAreaInSqFt.toFixed(2) } ÷ {BIGHA_FMT} = <span className="text-amber-600 dark:text-amber-400">{triBigha.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.bigha}</span>
+                        {triAreaInSqFt.toFixed(2) } ÷ {BIGHA_FMT} = <span className="text-brand-600 dark:text-brand-400">{triBigha.toLocaleString(undefined, { maximumFractionDigits: 3 })} {t.bigha}</span>
                       </p>
                     </div>
                   </div>

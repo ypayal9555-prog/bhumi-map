@@ -60,7 +60,7 @@ export default function DimensionsForm({
         darkMode ? 'border-stone-800' : 'border-stone-100'
       }`}>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600">
+          <div className="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-600">
             <Ruler className="w-4.5 h-4.5" />
           </div>
           <div>
@@ -68,7 +68,7 @@ export default function DimensionsForm({
               {t.dimensionsTitle}
             </h2>
             <p className={`text-[11px] font-medium ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-              {t.dimensionsSubtitle} <span className="font-semibold text-amber-600 dark:text-amber-400">{getUnitName()}</span>
+              {t.dimensionsSubtitle} <span className="font-semibold text-brand-600 dark:text-brand-400">{getUnitName()}</span>
             </p>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function DimensionsForm({
         <div className="space-y-1">
           <label className={`text-xs font-semibold flex justify-between items-center ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
             <span className="flex items-center gap-1">
-              <span className="text-amber-700 dark:text-amber-500 font-bold">AB</span> ({t.eastHindi})
+              <span className="text-brand-700 dark:text-brand-500 font-bold">AB</span> ({t.eastHindi})
             </span>
             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
               darkMode ? 'bg-stone-800 text-stone-400' : 'bg-stone-100 text-stone-400'
@@ -99,7 +99,7 @@ export default function DimensionsForm({
               value={dimensions.sideAB || ''}
               onChange={(e) => handleInputChange('sideAB', e.target.value)}
               placeholder="0.00"
-              className={`w-full border focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
+              className={`w-full border focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
                 darkMode 
                   ? 'bg-stone-800 border-stone-700 focus:bg-stone-950 text-stone-100 placeholder-stone-600' 
                   : 'bg-stone-50 border-stone-200 focus:bg-white text-stone-900 placeholder-stone-400'
@@ -112,7 +112,7 @@ export default function DimensionsForm({
         <div className="space-y-1">
           <label className={`text-xs font-semibold flex justify-between items-center ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
             <span className="flex items-center gap-1">
-              <span className="text-amber-700 dark:text-amber-500 font-bold">BC</span> ({t.northHindi})
+              <span className="text-brand-700 dark:text-brand-500 font-bold">BC</span> ({t.northHindi})
             </span>
             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
               darkMode ? 'bg-stone-800 text-stone-400' : 'bg-stone-100 text-stone-400'
@@ -126,7 +126,7 @@ export default function DimensionsForm({
               value={dimensions.sideBC || ''}
               onChange={(e) => handleInputChange('sideBC', e.target.value)}
               placeholder="0.00"
-              className={`w-full border focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
+              className={`w-full border focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
                 darkMode 
                   ? 'bg-stone-800 border-stone-700 focus:bg-stone-950 text-stone-100 placeholder-stone-600' 
                   : 'bg-stone-50 border-stone-200 focus:bg-white text-stone-900 placeholder-stone-400'
@@ -139,7 +139,7 @@ export default function DimensionsForm({
         <div className="space-y-1">
           <label className={`text-xs font-semibold flex justify-between items-center ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
             <span className="flex items-center gap-1">
-              <span className="text-amber-700 dark:text-amber-500 font-bold">CD</span> ({t.westHindi})
+              <span className="text-brand-700 dark:text-brand-500 font-bold">CD</span> ({t.westHindi})
             </span>
             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
               darkMode ? 'bg-stone-800 text-stone-400' : 'bg-stone-100 text-stone-400'
@@ -153,7 +153,7 @@ export default function DimensionsForm({
               value={dimensions.sideCD || ''}
               onChange={(e) => handleInputChange('sideCD', e.target.value)}
               placeholder="0.00"
-              className={`w-full border focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
+              className={`w-full border focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
                 darkMode 
                   ? 'bg-stone-800 border-stone-700 focus:bg-stone-950 text-stone-100 placeholder-stone-600' 
                   : 'bg-stone-50 border-stone-200 focus:bg-white text-stone-900 placeholder-stone-400'
@@ -166,7 +166,7 @@ export default function DimensionsForm({
         <div className="space-y-1">
           <label className={`text-xs font-semibold flex justify-between items-center ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
             <span className="flex items-center gap-1">
-              <span className="text-amber-700 dark:text-amber-500 font-bold">DA</span> ({t.southHindi})
+              <span className="text-brand-700 dark:text-brand-500 font-bold">DA</span> ({t.southHindi})
             </span>
             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
               darkMode ? 'bg-stone-800 text-stone-400' : 'bg-stone-100 text-stone-400'
@@ -180,7 +180,7 @@ export default function DimensionsForm({
               value={dimensions.sideDA || ''}
               onChange={(e) => handleInputChange('sideDA', e.target.value)}
               placeholder="0.00"
-              className={`w-full border focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
+              className={`w-full border focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
                 darkMode 
                   ? 'bg-stone-800 border-stone-700 focus:bg-stone-950 text-stone-100 placeholder-stone-600' 
                   : 'bg-stone-50 border-stone-200 focus:bg-white text-stone-900 placeholder-stone-400'
@@ -193,10 +193,10 @@ export default function DimensionsForm({
       {/* Precision Diagonal (Option) */}
       <div className={`pt-4 border-t ${darkMode ? 'border-stone-800' : 'border-stone-100'}`}>
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-700">
+          <div className="w-5 h-5 rounded-full bg-brand-500/10 flex items-center justify-center text-brand-700 dark:text-brand-300">
             <Sparkles className="w-3 h-3" />
           </div>
-          <span className="text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider">
+          <span className="text-[10px] font-bold text-brand-800 dark:text-brand-400 uppercase tracking-wider">
             {t.precisionOption}
           </span>
         </div>
@@ -216,7 +216,7 @@ export default function DimensionsForm({
               value={dimensions.diagonalBD || ''}
               onChange={(e) => handleInputChange('diagonalBD', e.target.value)}
               placeholder={language === 'hi' ? 'विकर्ण की माप दर्ज करें (वैकल्पिक)' : 'Enter diagonal measurement (optional)'}
-              className={`w-full border-2 border-dashed focus:border-solid focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
+              className={`w-full border-2 border-dashed focus:border-solid focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded-xl p-3 text-sm font-semibold font-mono transition-all ${
                 darkMode 
                   ? 'bg-stone-800 border-stone-700 focus:bg-stone-950 text-stone-100 placeholder-stone-600' 
                   : 'bg-stone-50 border-stone-200 focus:bg-white text-stone-900 placeholder-stone-400'
@@ -232,8 +232,8 @@ export default function DimensionsForm({
               role="alert"
               className={`mt-2 p-3 rounded-xl border text-[11px] leading-relaxed ${
                 darkMode
-                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-200'
-                  : 'bg-amber-50 border-amber-300 text-amber-900'
+                  ? 'bg-warn-500/10 border-warn-500/35 text-warn-200'
+                  : 'bg-warn-50 border-warn-300 text-warn-900'
               }`}
             >
               <p className="font-bold mb-0.5">⚠ {t.diagonalMismatchTitle}</p>

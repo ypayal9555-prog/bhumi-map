@@ -157,7 +157,7 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
         darkMode ? 'bg-stone-800/50 border-stone-800 text-stone-100' : 'bg-stone-50 border-stone-100 text-stone-700'
       }`}>
         <div className="flex items-center gap-1.5">
-          <Move className="w-4 h-4 text-amber-600" />
+          <Move className="w-4 h-4 text-brand-600" />
           <span className="text-xs font-bold tracking-wide uppercase">{t.visualizerTitle}</span>
         </div>
         <div className="flex items-center gap-2">
@@ -197,14 +197,14 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
             transition={{ duration: 0.35, ease: 'easeInOut' }}
             className={`border-b text-xs leading-relaxed overflow-hidden relative ${
               darkMode 
-                ? 'bg-amber-950/20 border-stone-800 text-amber-200' 
-                : 'bg-amber-500/5 border-stone-100 text-amber-900'
+                ? 'bg-brand-950/20 border-stone-800 text-brand-200' 
+                : 'bg-brand-500/5 border-stone-100 text-brand-900'
             }`}
           >
             <div className="p-3.5">
               <div className="flex justify-between items-start gap-4">
                 <div className="space-y-0.5">
-                  <p className={`font-semibold ${darkMode ? 'text-amber-400' : 'text-amber-950'}`}>{t.visualizerHelpTitle}</p>
+                  <p className={`font-semibold ${darkMode ? 'text-brand-400' : 'text-brand-950'}`}>{t.visualizerHelpTitle}</p>
                   <p className={darkMode ? 'text-stone-400' : 'text-stone-600'}>{t.visualizerHelpBody}</p>
                 </div>
                 <motion.button
@@ -239,8 +239,8 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
               {/* Outer Polygon Shade */}
               <polygon
                 points={`${pA.x},${pA.y} ${pB.x},${pB.y} ${pC.x},${pC.y} ${pD.x},${pD.y}`}
-                fill={darkMode ? "rgba(245, 158, 11, 0.08)" : "rgba(245, 158, 11, 0.04)"}
-                stroke="#d97706"
+                fill={darkMode ? "rgba(200, 169, 108, 0.10)" : "rgba(12, 91, 66, 0.05)"}
+                stroke={darkMode ? "#559b80" : "#0c5b42"}
                 strokeWidth="2.5"
                 strokeLinejoin="round"
                 className="transition-all duration-150"
@@ -252,7 +252,7 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
                 y1={pB.y}
                 x2={pD.x}
                 y2={pD.y}
-                stroke={darkMode ? "#78716c" : "#6b7280"}
+                stroke={darkMode ? "#6b6353" : "#c6bda8"}
                 strokeWidth="1.5"
                 strokeDasharray="4 4"
                 className="opacity-60"
@@ -261,8 +261,8 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
               {/* Length Labels along the Edges */}
               {/* Side AB */}
               <g transform={`translate(${midAB.x}, ${midAB.y - 8})`}>
-                <rect x="-24" y="-10" width="48" height="16" rx="4" fill={darkMode ? "#292524" : "white"} stroke={darkMode ? "#44403c" : "#e5e7eb"} strokeWidth="1" />
-                <text fill={darkMode ? "#f5f5f4" : "#1f2937"} fontSize="10" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
+                <rect x="-24" y="-10" width="48" height="16" rx="4" fill={darkMode ? "#211d18" : "#fffdf8"} stroke={darkMode ? "#403a30" : "#e8e2d4"} strokeWidth="1" />
+                <text fill={darkMode ? "#f5f2e9" : "#1a1713"} fontSize="10" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
                   {dimensions.sideAB}
                   {suffix}
                 </text>
@@ -270,8 +270,8 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
 
               {/* Side BC */}
               <g transform={`translate(${midBC.x + 12}, ${midBC.y})`}>
-                <rect x="-24" y="-10" width="48" height="16" rx="4" fill={darkMode ? "#292524" : "white"} stroke={darkMode ? "#44403c" : "#e5e7eb"} strokeWidth="1" />
-                <text fill={darkMode ? "#f5f5f4" : "#1f2937"} fontSize="10" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
+                <rect x="-24" y="-10" width="48" height="16" rx="4" fill={darkMode ? "#211d18" : "#fffdf8"} stroke={darkMode ? "#403a30" : "#e8e2d4"} strokeWidth="1" />
+                <text fill={darkMode ? "#f5f2e9" : "#1a1713"} fontSize="10" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
                   {dimensions.sideBC}
                   {suffix}
                 </text>
@@ -279,8 +279,8 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
 
               {/* Side CD */}
               <g transform={`translate(${midCD.x}, ${midCD.y + 12})`}>
-                <rect x="-24" y="-10" width="48" height="16" rx="4" fill={darkMode ? "#292524" : "white"} stroke={darkMode ? "#44403c" : "#e5e7eb"} strokeWidth="1" />
-                <text fill={darkMode ? "#f5f5f4" : "#1f2937"} fontSize="10" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
+                <rect x="-24" y="-10" width="48" height="16" rx="4" fill={darkMode ? "#211d18" : "#fffdf8"} stroke={darkMode ? "#403a30" : "#e8e2d4"} strokeWidth="1" />
+                <text fill={darkMode ? "#f5f2e9" : "#1a1713"} fontSize="10" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
                   {dimensions.sideCD}
                   {suffix}
                 </text>
@@ -288,8 +288,8 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
 
               {/* Side DA */}
               <g transform={`translate(${midDA.x - 24}, ${midDA.y})`}>
-                <rect x="-24" y="-10" width="48" height="16" rx="4" fill={darkMode ? "#292524" : "white"} stroke={darkMode ? "#44403c" : "#e5e7eb"} strokeWidth="1" />
-                <text fill={darkMode ? "#f5f5f4" : "#1f2937"} fontSize="10" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
+                <rect x="-24" y="-10" width="48" height="16" rx="4" fill={darkMode ? "#211d18" : "#fffdf8"} stroke={darkMode ? "#403a30" : "#e8e2d4"} strokeWidth="1" />
+                <text fill={darkMode ? "#f5f2e9" : "#1a1713"} fontSize="10" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
                   {dimensions.sideDA}
                   {suffix}
                 </text>
@@ -298,8 +298,8 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
               {/* Diagonal BD */}
               {dimensions.diagonalBD > 0 && (
                 <g transform={`translate(${midBD.x}, ${midBD.y})`}>
-                  <rect x="-30" y="-10" width="60" height="16" rx="4" fill={darkMode ? "#451a03" : "#fef3c7"} stroke={darkMode ? "#78350f" : "#fcd34d"} strokeWidth="1" />
-                  <text fill={darkMode ? "#fde047" : "#b45309"} fontSize="9" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
+                  <rect x="-30" y="-10" width="60" height="16" rx="4" fill={darkMode ? "#2b2416" : "#f6eedc"} stroke={darkMode ? "#5f481f" : "#dcc79a"} strokeWidth="1" />
+                  <text fill={darkMode ? "#dcc79a" : "#7a5e2a"} fontSize="9" fontWeight="bold" textAnchor="middle" y="2" fontFamily="monospace">
                     {t.diagShort} {dimensions.diagonalBD}
                     {suffix}
                   </text>
@@ -314,14 +314,14 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
                   onPointerDown={(e) => handlePointerDown(pt.id, e)}
                 >
                   {/* Glowing touch target */}
-                  <circle cx={pt.x} cy={pt.y} r="16" fill="transparent" className="hover:fill-amber-500/10 transition-colors" />
+                  <circle cx={pt.x} cy={pt.y} r="16" fill="transparent" className="hover:fill-brand-500/10 transition-colors" />
                   {/* Center Dot */}
                   <circle
                     cx={pt.x}
                     cy={pt.y}
                     r="7"
-                    fill="#d97706"
-                    stroke={darkMode ? "#292524" : "#ffffff"}
+                    fill="#b08d4c"
+                    stroke={darkMode ? "#100e0b" : "#fffdf8"}
                     strokeWidth="2"
                     className="group-hover/handle:scale-125 transition-transform shadow-md"
                   />
@@ -329,7 +329,7 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
                   <text
                     x={pt.x + (pt.id === 'A' || pt.id === 'D' ? -15 : 15)}
                     y={pt.y + (pt.id === 'A' || pt.id === 'B' ? -12 : 15)}
-                    fill={darkMode ? "#f5f5f4" : "#1c1917"}
+                    fill={darkMode ? "#f5f2e9" : "#1a1713"}
                     fontSize="13"
                     fontWeight="800"
                     textAnchor="middle"
@@ -351,7 +351,7 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
             }`}
           >
             <div className="text-center max-w-[260px]">
-              <div className="mx-auto mb-2 w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-600">
+              <div className="mx-auto mb-2 w-10 h-10 rounded-full bg-warn-500/15 flex items-center justify-center text-warn-600">
                 <X className="w-5 h-5" />
               </div>
               <p className={`text-sm font-bold mb-1 ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
@@ -368,7 +368,7 @@ export default function PlotCanvas({ dimensions, unit, onDimensionsChanged, dark
         <div className={`absolute bottom-4 right-4 backdrop-blur-md px-3 py-1.5 rounded-full border shadow-sm flex items-center gap-2 transition-colors ${
           darkMode ? 'bg-stone-900/90 border-stone-800' : 'bg-white/90 border-stone-200'
         }`}>
-          <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${drawable ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+          <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${drawable ? 'bg-emerald-500' : 'bg-warn-500'}`}></span>
           <span className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>{t.liveGeometry}</span>
         </div>
       </div>

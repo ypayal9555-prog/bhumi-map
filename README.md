@@ -22,6 +22,22 @@ normal Vite project.
   and ground-based measurement with guniya / tape / kadi scales.
 - **Bilingual UI (English + Hindi)** and dark mode — both persisted in `localStorage`.
 
+## Design tokens
+
+The UI uses one palette, defined in `src/index.css` under `@theme`. Components never hard-code
+a colour.
+
+| Token | Meaning |
+| --- | --- |
+| `brand-*` | Deep emerald — primary actions, area figures, highlights |
+| `gold-*` | Brass accent — hairlines, plot handles, small emphasis only |
+| `warn-*` | Ochre — warnings and "cannot draw" states, kept distinct from brand |
+| `stone-*` | Warm paper (light) → charcoal (dark) neutrals |
+| `font-serif` | Fraunces — wordmark, hero numbers, certificate titles |
+
+Change the palette here, not in components. `stone-850/450/650/250` are project-specific steps;
+they are declared explicitly so no utility silently resolves to nothing.
+
 ## Land-unit standards (do not "fix" these)
 
 The factors in `LAND_UNITS` (`src/types.ts`) follow the **local revenue standard used by this

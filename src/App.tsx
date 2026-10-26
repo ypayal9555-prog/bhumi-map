@@ -193,7 +193,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen font-sans selection:bg-amber-500/30 selection:text-amber-950 pb-20 md:pb-10 transition-colors duration-300 ${
+    <div className={`min-h-screen font-sans selection:bg-brand-500/30 selection:text-brand-950 pb-20 md:pb-10 transition-colors duration-300 ${
       darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-100 text-stone-900'
     }`}>
       {/* Top Header */}
@@ -235,7 +235,7 @@ export default function App() {
               {activeTool === 'standard' && (
                 <motion.div
                   layoutId="activeTool"
-                  className="absolute inset-0 bg-amber-600 rounded-lg shadow-sm shadow-black/10"
+                  className="absolute inset-0 bg-brand-600 rounded-lg shadow-sm shadow-black/10"
                   style={{ zIndex: -1 }}
                   transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                 />
@@ -259,7 +259,7 @@ export default function App() {
               {activeTool === 'sarvguniya' && (
                 <motion.div
                   layoutId="activeTool"
-                  className="absolute inset-0 bg-amber-600 rounded-lg shadow-sm shadow-black/10"
+                  className="absolute inset-0 bg-brand-600 rounded-lg shadow-sm shadow-black/10"
                   style={{ zIndex: -1 }}
                   transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                 />
@@ -294,7 +294,7 @@ export default function App() {
                   {unit === u && (
                     <motion.div
                       layoutId="activeUnit"
-                      className="absolute inset-0 bg-amber-600 rounded-lg shadow-sm shadow-black/10"
+                      className="absolute inset-0 bg-brand-600 rounded-lg shadow-sm shadow-black/10"
                       style={{ zIndex: -1 }}
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
@@ -341,51 +341,52 @@ export default function App() {
           {/* Right Column: Calculations & persistence (5 cols) */}
           <div className="col-span-5 space-y-6">
             {/* Primary Calculations Output */}
-            <div className="bg-amber-700 p-6 rounded-2xl text-white shadow-lg shadow-amber-700/10 flex flex-col items-center justify-center relative overflow-hidden border border-amber-600/30">
-              <div className="absolute -top-12 -right-12 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
-              <span className="text-[10px] font-bold opacity-85 uppercase tracking-widest mb-1.5 text-center">
+            <div className="bg-brand-800 p-6 rounded-2xl text-white shadow-sm shadow-brand-950/20 flex flex-col items-center justify-center relative overflow-hidden border border-brand-700/60">
+              <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-gold-500/0 via-gold-400 to-gold-500/0"></div>
+              <div className="absolute -top-16 -right-10 w-40 h-40 bg-brand-400/10 rounded-full blur-2xl"></div>
+              <span className="text-[9.5px] font-semibold text-brand-200 uppercase tracking-[0.2em] mb-2 text-center">
                 {t.totalCalculatedArea}
               </span>
-              <div className="flex items-baseline gap-1.5 justify-center">
-                <span className="text-3xl font-extrabold tracking-tight font-mono">
+              <div className="flex items-baseline gap-2 justify-center">
+                <span className="text-[2.6rem] leading-none font-serif font-medium tracking-tight tabular-nums">
                   {calculatedAreaInUnit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
-                <span className="text-xs font-semibold opacity-90 uppercase tracking-wider">{getUnitSuffix()}</span>
+                <span className="text-[11px] font-semibold text-gold-300 uppercase tracking-[0.14em]">{getUnitSuffix()}</span>
               </div>
 
               {/* Converted absolute Square Feet display */}
               {unit !== 'feet' && (
-                <p className="text-xs opacity-80 mt-1 font-medium font-mono">
+                <p className="text-[11px] text-brand-200 mt-2 font-mono">
                   ≈ {areaInSqFt.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} sq ft
                 </p>
               )}
 
-              <div className="mt-4 w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                <div className="bg-amber-400 h-full w-full animate-pulse"></div>
+              <div className="mt-5 w-full bg-white/10 h-[3px] rounded-full overflow-hidden">
+                <div className="bg-gradient-to-r from-gold-400/70 to-gold-200/70 h-full w-full"></div>
               </div>
             </div>
 
             {/* Indian local subdivisions conversions */}
             <div className="grid grid-cols-2 gap-4">
               <div className={`p-4 rounded-xl border text-center space-y-0.5 transition-colors duration-300 ${
-                darkMode ? 'bg-amber-500/10 border-amber-500/10' : 'bg-amber-50 border-amber-200/80'
+                darkMode ? 'bg-brand-500/10 border-brand-500/10' : 'bg-brand-50 border-brand-200/80'
               }`}>
-                <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.biswa}</span>
-                <span className="text-2xl font-bold font-mono text-amber-950 dark:text-amber-300">{biswa.toFixed(2)}</span>
+                <span className="text-[10px] font-bold text-brand-900 dark:text-brand-400 uppercase tracking-widest block">{t.biswa}</span>
+                <span className="text-2xl font-bold font-mono text-brand-950 dark:text-brand-300">{biswa.toFixed(2)}</span>
                 <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{t.northUPRegion}</span>
               </div>
               <div className={`p-4 rounded-xl border text-center space-y-0.5 transition-colors duration-300 ${
-                darkMode ? 'bg-amber-500/10 border-amber-500/10' : 'bg-amber-50 border-amber-200/80'
+                darkMode ? 'bg-brand-500/10 border-brand-500/10' : 'bg-brand-50 border-brand-200/80'
               }`}>
-                <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400 uppercase tracking-widest block">{t.bigha}</span>
-                <span className="text-2xl font-bold font-mono text-amber-950 dark:text-amber-300">{bigha.toFixed(2)}</span>
+                <span className="text-[10px] font-bold text-brand-900 dark:text-brand-400 uppercase tracking-widest block">{t.bigha}</span>
+                <span className="text-2xl font-bold font-mono text-brand-950 dark:text-brand-300">{bigha.toFixed(2)}</span>
                 <span className={`text-[9px] font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>{t.standardRevenue}</span>
               </div>
               <div className={`p-3.5 rounded-xl border text-center space-y-0.5 col-span-2 flex items-center justify-between px-6 transition-colors duration-300 ${
-                darkMode ? 'bg-stone-900 border-stone-800' : 'bg-stone-50 border-stone-200'
+                darkMode ? 'bg-brand-500/10 border-brand-500/10' : 'bg-brand-50 border-brand-200/80'
               }`}>
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{t.acre}</span>
-                <span className={`text-lg font-bold font-mono ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{acre.toFixed(3)}</span>
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-brand-400' : 'text-brand-900'}`}>{t.acre}</span>
+                <span className={`text-lg font-bold font-mono ${darkMode ? 'text-brand-300' : 'text-brand-950'}`}>{acre.toFixed(3)}</span>
               </div>
             </div>
 
@@ -470,18 +471,19 @@ export default function App() {
                 />
 
                 {/* Mobile Primary Result Box */}
-                <div className="bg-amber-700 p-5 rounded-2xl text-white flex flex-col items-center justify-center relative overflow-hidden">
-                  <span className="text-[10px] font-bold opacity-85 uppercase tracking-widest mb-1.5 text-center">
+                <div className="bg-brand-800 p-5 rounded-2xl text-white flex flex-col items-center justify-center relative overflow-hidden border border-brand-700/60">
+                  <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-gold-500/0 via-gold-400 to-gold-500/0"></div>
+                  <span className="text-[9px] font-semibold text-brand-200 uppercase tracking-[0.2em] mb-2 text-center">
                     {t.totalCalculatedArea}
                   </span>
-                  <div className="flex items-baseline gap-1.5 justify-center">
-                    <span className="text-2xl font-extrabold font-mono">
+                  <div className="flex items-baseline gap-2 justify-center">
+                    <span className="text-[2rem] leading-none font-serif font-medium tabular-nums">
                       {calculatedAreaInUnit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
-                    <span className="text-xs uppercase font-bold">{getUnitSuffix()}</span>
+                    <span className="text-[10px] uppercase font-semibold text-gold-300 tracking-[0.12em]">{getUnitSuffix()}</span>
                   </div>
                   {unit !== 'feet' && (
-                    <p className="text-[10px] opacity-80 font-mono mt-0.5">
+                    <p className="text-[10px] text-brand-200 font-mono mt-1.5">
                       ≈ {areaInSqFt.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} sq ft
                     </p>
                   )}
@@ -490,16 +492,16 @@ export default function App() {
                 {/* Mobile conversions */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className={`p-3 rounded-xl border text-center transition-colors duration-300 ${
-                    darkMode ? 'bg-amber-500/10 border-amber-500/10' : 'bg-amber-50 border-amber-200/80'
+                    darkMode ? 'bg-brand-500/10 border-brand-500/10' : 'bg-brand-50 border-brand-200/80'
                   }`}>
-                    <span className="text-[9px] font-bold text-amber-900 dark:text-amber-400 uppercase block">{t.biswa}</span>
-                    <span className="text-lg font-bold font-mono text-amber-950 dark:text-amber-300">{biswa.toFixed(2)}</span>
+                    <span className="text-[9px] font-bold text-brand-900 dark:text-brand-400 uppercase block">{t.biswa}</span>
+                    <span className="text-lg font-bold font-mono text-brand-950 dark:text-brand-300">{biswa.toFixed(2)}</span>
                   </div>
                   <div className={`p-3 rounded-xl border text-center transition-colors duration-300 ${
-                    darkMode ? 'bg-amber-500/10 border-amber-500/10' : 'bg-amber-50 border-amber-200/80'
+                    darkMode ? 'bg-brand-500/10 border-brand-500/10' : 'bg-brand-50 border-brand-200/80'
                   }`}>
-                    <span className="text-[9px] font-bold text-amber-900 dark:text-amber-400 uppercase block">{t.bigha}</span>
-                    <span className="text-lg font-bold font-mono text-amber-950 dark:text-amber-300">{bigha.toFixed(2)}</span>
+                    <span className="text-[9px] font-bold text-brand-900 dark:text-brand-400 uppercase block">{t.bigha}</span>
+                    <span className="text-lg font-bold font-mono text-brand-950 dark:text-brand-300">{bigha.toFixed(2)}</span>
                   </div>
                 </div>
               </motion.div>
@@ -514,15 +516,16 @@ export default function App() {
                 transition={{ duration: 0.18, ease: "easeInOut" }}
                 className="space-y-5"
               >
-                <div className="bg-amber-700 p-5 rounded-2xl text-white flex flex-col items-center justify-center relative overflow-hidden">
-                  <span className="text-[10px] font-bold opacity-80 uppercase tracking-widest mb-1">
+                <div className="bg-brand-800 p-5 rounded-2xl text-white flex flex-col items-center justify-center relative overflow-hidden border border-brand-700/60">
+                  <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-gold-500/0 via-gold-400 to-gold-500/0"></div>
+                  <span className="text-[9px] font-semibold text-brand-200 uppercase tracking-[0.2em] mb-2">
                     {t.totalCalculatedArea}
                   </span>
-                  <div className="flex items-baseline gap-1.5 justify-center">
-                    <span className="text-2xl font-extrabold font-mono">
+                  <div className="flex items-baseline gap-2 justify-center">
+                    <span className="text-[2rem] leading-none font-serif font-medium tabular-nums">
                       {calculatedAreaInUnit.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
                     </span>
-                    <span className="text-xs uppercase font-bold">{getUnitSuffix()}</span>
+                    <span className="text-[10px] uppercase font-semibold text-gold-300 tracking-[0.12em]">{getUnitSuffix()}</span>
                   </div>
                 </div>
 
@@ -596,14 +599,14 @@ export default function App() {
             whileTap={{ scale: 0.9 }}
             className={`relative flex flex-col items-center justify-center py-1 transition-all flex-1 cursor-pointer select-none outline-none ${
               currentTab === 'calculator' 
-                ? 'text-amber-600 font-extrabold' 
+                ? 'text-brand-600 font-extrabold' 
                 : darkMode ? 'text-stone-400 hover:text-stone-200' : 'text-stone-500 hover:text-stone-700'
             }`}
           >
             {currentTab === 'calculator' && (
               <motion.div
                 layoutId="activeTabIndicator"
-                className="absolute -top-2.5 h-1 w-12 bg-amber-600 rounded-b-full"
+                className="absolute -top-2.5 h-1 w-12 bg-brand-600 rounded-b-full"
                 transition={{ type: 'spring', stiffness: 350, damping: 25 }}
               />
             )}
@@ -616,14 +619,14 @@ export default function App() {
             whileTap={{ scale: 0.9 }}
             className={`relative flex flex-col items-center justify-center py-1 transition-all flex-1 cursor-pointer select-none outline-none ${
               currentTab === 'division' 
-                ? 'text-amber-600 font-extrabold' 
+                ? 'text-brand-600 font-extrabold' 
                 : darkMode ? 'text-stone-400 hover:text-stone-200' : 'text-stone-500 hover:text-stone-700'
             }`}
           >
             {currentTab === 'division' && (
               <motion.div
                 layoutId="activeTabIndicator"
-                className="absolute -top-2.5 h-1 w-12 bg-amber-600 rounded-b-full"
+                className="absolute -top-2.5 h-1 w-12 bg-brand-600 rounded-b-full"
                 transition={{ type: 'spring', stiffness: 350, damping: 25 }}
               />
             )}
@@ -636,14 +639,14 @@ export default function App() {
             whileTap={{ scale: 0.9 }}
             className={`relative flex flex-col items-center justify-center py-1 transition-all flex-1 cursor-pointer select-none outline-none ${
               currentTab === 'history' 
-                ? 'text-amber-600 font-extrabold' 
+                ? 'text-brand-600 font-extrabold' 
                 : darkMode ? 'text-stone-400 hover:text-stone-200' : 'text-stone-500 hover:text-stone-700'
             }`}
           >
             {currentTab === 'history' && (
               <motion.div
                 layoutId="activeTabIndicator"
-                className="absolute -top-2.5 h-1 w-12 bg-amber-600 rounded-b-full"
+                className="absolute -top-2.5 h-1 w-12 bg-brand-600 rounded-b-full"
                 transition={{ type: 'spring', stiffness: 350, damping: 25 }}
               />
             )}

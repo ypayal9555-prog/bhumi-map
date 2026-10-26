@@ -60,7 +60,7 @@ export default function HistoryList({
         darkMode ? 'border-stone-850' : 'border-stone-100'
       }`}>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600">
+          <div className="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-600">
             <Layers className="w-4.5 h-4.5" />
           </div>
           <div>
@@ -76,7 +76,7 @@ export default function HistoryList({
           <motion.button
             onClick={onClearAll}
             whileTap={{ scale: 0.95 }}
-            className="text-xs text-red-650 dark:text-red-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer select-none"
+            className="text-xs text-red-600 dark:text-red-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer select-none"
           >
             <Trash2 className="w-3 h-3" />
             <span>{t.clearAll}</span>
@@ -100,15 +100,15 @@ export default function HistoryList({
               placeholder={t.plotPlaceholder}
               className={`flex-1 border rounded-lg p-2 text-xs font-semibold transition-all ${
                 darkMode
-                  ? 'bg-stone-800 border-stone-700 text-stone-100 focus:border-amber-500 placeholder-stone-600'
-                  : 'bg-white border-stone-200 text-stone-900 focus:border-amber-500 placeholder-stone-400'
+                  ? 'bg-stone-800 border-stone-700 text-stone-100 focus:border-brand-500 placeholder-stone-600'
+                  : 'bg-white border-stone-200 text-stone-900 focus:border-brand-500 placeholder-stone-400'
               }`}
             />
             <motion.button
               type="submit"
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.02 }}
-              className="bg-amber-600 text-white px-3 py-2 rounded-lg font-bold text-xs hover:bg-amber-700 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer shadow-sm select-none"
+              className="bg-brand-600 text-white px-3 py-2 rounded-lg font-bold text-xs hover:bg-brand-700 transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer shadow-sm select-none"
             >
               {saveSuccess ? (
                 <>
@@ -146,8 +146,8 @@ export default function HistoryList({
                 key={rec.id}
                 className={`p-4 rounded-xl border transition-all space-y-3 relative group/item shadow-sm ${
                   darkMode 
-                    ? 'border-stone-800 bg-stone-850 hover:border-amber-500/50 hover:bg-stone-800/80' 
-                    : 'border-stone-200 bg-white hover:border-amber-500/50 hover:bg-stone-50/40'
+                    ? 'border-stone-800 bg-stone-850 hover:border-brand-500/50 hover:bg-stone-800/80' 
+                    : 'border-stone-200 bg-white hover:border-brand-500/50 hover:bg-stone-50/40'
                 }`}
               >
                 <div className="flex justify-between items-start">
@@ -212,7 +212,7 @@ export default function HistoryList({
                       {rec.areaInSqFt.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
                       <span className="text-[10px] font-normal text-stone-500 ml-0.5">sq ft</span>
                     </span>
-                    <div className="text-[10px] text-amber-700 dark:text-amber-450 font-semibold font-mono mt-0.5">
+                    <div className="text-[10px] text-brand-700 dark:text-brand-400 font-semibold font-mono mt-0.5">
                       {biswaVal.toFixed(2)} {t.biswa} • {bighaVal.toFixed(2)} {t.bigha}
                     </div>
                   </div>

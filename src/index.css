@@ -1,23 +1,91 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
 
+/*
+ * Theme: "Emerald & Brass" premium.
+ *
+ * - `brand-*`  deep emerald — replaces the old orange CTA colour everywhere.
+ * - `gold-*`   brass accent, used sparingly (hairlines, small emphasis).
+ * - `warn-*`   ochre, deliberately distinct from brand so warnings still read
+ *              as warnings now that "amber" is gone.
+ * - `stone-*`  warm paper / charcoal ink instead of Tailwind's cool grey.
+ *
+ * Everything is defined here once. A palette change must not require touching
+ * components.
+ */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  --color-stone-850: #22201e;
+
+  /* Brand — deep emerald */
+  --color-brand-50: #eff6f2;
+  --color-brand-100: #daebe3;
+  --color-brand-200: #b5d7c7;
+  --color-brand-300: #86bca5;
+  --color-brand-400: #559b80;
+  --color-brand-500: #2f7c60;
+  --color-brand-600: #0c5b42;
+  --color-brand-700: #0a4b37;
+  --color-brand-800: #083d2d;
+  --color-brand-900: #073024;
+  --color-brand-950: #041c15;
+
+  /* Brass accent */
+  --color-gold-100: #f6eedc;
+  --color-gold-200: #eadcb8;
+  --color-gold-300: #dcc79a;
+  --color-gold-400: #c8a96c;
+  --color-gold-500: #b08d4c;
+  --color-gold-600: #96753b;
+  --color-gold-700: #7a5e2a;
+
+  /* Warning — ochre */
+  --color-warn-50: #fdf6e3;
+  --color-warn-100: #faedcb;
+  --color-warn-200: #f3dda3;
+  --color-warn-300: #e9c46a;
+  --color-warn-400: #dfae45;
+  --color-warn-500: #c8912a;
+  --color-warn-600: #a9741f;
+  --color-warn-700: #85591b;
+  --color-warn-800: #6b4718;
+  --color-warn-900: #4e3413;
+
+  /* Warm neutrals — paper (light) to charcoal (dark) */
+  --color-stone-50: #faf8f2;
+  --color-stone-100: #f5f2e9;
+  --color-stone-200: #e8e2d4;
+  --color-stone-250: #dfd8c7;
+  --color-stone-300: #d4ccb9;
+  --color-stone-350: #c6bda8;
+  --color-stone-400: #a89f8b;
+  --color-stone-450: #948b77;
+  --color-stone-500: #7d7461;
+  --color-stone-550: #6b6353;
+  --color-stone-600: #5c5445;
+  --color-stone-650: #4e473a;
+  --color-stone-700: #403a30;
+  --color-stone-750: #353027;
+  --color-stone-800: #2b2620;
+  --color-stone-850: #211d18;
+  --color-stone-900: #1a1713;
+  --color-stone-950: #100e0b;
+
+  /* Tighter corners read as "instrument", not "web template" */
+  --radius-2xl: 0.875rem;
+  --radius-3xl: 1rem;
 }
 
 /* Custom background grid for the plot canvas */
 .canvas-grid {
-  background-image: radial-gradient(circle, #d97706 1px, transparent 1px);
+  background-image: radial-gradient(circle, #b08d4c 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 .canvas-grid-dark {
-  background-image: radial-gradient(circle, rgba(245, 158, 11, 0.15) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(200, 169, 108, 0.22) 1px, transparent 1px);
   background-size: 20px 20px;
 }
-
-

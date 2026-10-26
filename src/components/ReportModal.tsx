@@ -218,7 +218,7 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
           darkMode ? 'bg-stone-950 text-stone-100 border-b border-stone-800' : 'bg-stone-900 text-white'
         }`}>
           <div className="flex items-center gap-2">
-            <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
+            <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5 text-brand-500" />
             <h2 className="font-bold text-xs sm:text-sm tracking-wide uppercase truncate max-w-[180px] sm:max-w-none">{t.surveyReportTitle}</h2>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
@@ -226,7 +226,7 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
               onClick={handlePrint}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.02 }}
-              className="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1.5 sm:px-4 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none"
+              className="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1.5 sm:px-4 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>{t.printPDF}</span>
@@ -244,10 +244,10 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
         </div>
 
         {/* Share Banner (Excluded during print) */}
-        <div className="no-print px-4 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-300 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-amber-500/5 border-amber-500/10">
+        <div className="no-print px-4 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-300 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-brand-500/5 border-brand-500/10">
           <div className="space-y-0.5">
-            <h3 className="text-xs font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-400">
-              {language === 'hi' ? '📱 रिपोर्ट शेयर करें' : '📱 Share Survey Report'}
+            <h3 className="text-xs font-extrabold uppercase tracking-wider text-brand-800 dark:text-brand-400">
+              {language === 'hi' ? 'रिपोर्ट शेयर करें' : 'Share Survey Report'}
             </h3>
             <p className="text-[10px] sm:text-[11px] text-stone-500 dark:text-stone-400">
               {language === 'hi' 
@@ -284,7 +284,7 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
             {/* Native / System Share */}
             <button
               onClick={handleShare}
-              className="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none shadow-sm shadow-amber-600/10"
+              className="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none shadow-sm shadow-brand-600/10"
             >
               <Share2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               <span>{language === 'hi' ? 'अन्य ऐप्स' : 'Share Direct'}</span>
@@ -306,19 +306,19 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
             }`}
           >
             {/* Elegant watermark background pattern for printing authenticity */}
-            <div className="absolute inset-0 bg-radial-gradient from-transparent to-stone-50/10 pointer-events-none"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-stone-50/10 pointer-events-none"></div>
 
             {/* Certificate Header */}
             <div className={`text-center space-y-2 border-b pb-6 relative ${darkMode ? 'border-stone-800' : 'border-stone-200'}`}>
-              <span className="text-xs tracking-widest text-amber-600 dark:text-amber-500 font-bold uppercase block">{t.officialMapAssessment}</span>
+              <span className="text-xs tracking-widest text-brand-600 dark:text-brand-500 font-bold uppercase block">{t.officialMapAssessment}</span>
               <h1 className={`text-2xl md:text-3xl font-extrabold tracking-tight font-serif uppercase ${darkMode ? 'text-stone-100' : 'text-stone-950'}`}>{t.bhumiMapCertificate}</h1>
               <p className={`text-xs font-medium tracking-wide ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
                 {t.landBoundaryReport}
               </p>
               <div className="flex justify-center items-center gap-2 mt-3">
-                <span className="h-0.5 w-12 bg-amber-600"></span>
-                <Award className="w-5 h-5 text-amber-600" />
-                <span className="h-0.5 w-12 bg-amber-600"></span>
+                <span className="h-0.5 w-12 bg-brand-600"></span>
+                <Award className="w-5 h-5 text-brand-600" />
+                <span className="h-0.5 w-12 bg-brand-600"></span>
               </div>
             </div>
 
@@ -352,8 +352,8 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
                     <svg className="w-full h-full p-2" viewBox="0 0 300 220">
                       <polygon
                         points={`${pA.x * 0.75},${pA.y * 0.75} ${pB.x * 0.75},${pB.y * 0.75} ${pC.x * 0.75},${pC.y * 0.75} ${pD.x * 0.75},${pD.y * 0.75}`}
-                        fill={darkMode ? "rgba(245, 158, 11, 0.08)" : "rgba(245, 158, 11, 0.03)"}
-                        stroke="#b45309"
+                        fill={darkMode ? "rgba(200, 169, 108, 0.10)" : "rgba(12, 91, 66, 0.04)"}
+                        stroke={darkMode ? "#559b80" : "#0c5b42"}
                         strokeWidth="2"
                         strokeLinejoin="round"
                       />
@@ -362,20 +362,20 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
                         y1={pB.y * 0.75}
                         x2={pD.x * 0.75}
                         y2={pD.y * 0.75}
-                        stroke={darkMode ? "#57534e" : "#9ca3af"}
+                        stroke={darkMode ? "#6b6353" : "#c6bda8"}
                         strokeWidth="1"
                         strokeDasharray="2 2"
                       />
                       {/* Vertex points */}
                       {[pA, pB, pC, pD].map((pt) => (
                         <g key={pt.id}>
-                          <circle cx={pt.x * 0.75} cy={pt.y * 0.75} r="4" fill="#b45309" stroke={darkMode ? "#1c1917" : "white"} strokeWidth="1" />
+                          <circle cx={pt.x * 0.75} cy={pt.y * 0.75} r="4" fill="#b08d4c" stroke={darkMode ? "#100e0b" : "white"} strokeWidth="1" />
                           <text
                             x={pt.x * 0.75 + (pt.id === 'A' || pt.id === 'D' ? -8 : 8)}
                             y={pt.y * 0.75 + (pt.id === 'A' || pt.id === 'B' ? -6 : 8)}
                             fontSize="9"
                             fontWeight="bold"
-                            fill={darkMode ? "#f5f5f4" : "#1c1917"}
+                            fill={darkMode ? "#f5f2e9" : "#1a1713"}
                             textAnchor="middle"
                           >
                             {pt.label}
@@ -423,10 +423,10 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
                         <td className="px-4 py-2 text-right">{dimensions.sideDA.toFixed(2)}</td>
                       </tr>
                       {dimensions.diagonalBD > 0 && (
-                        <tr className="bg-amber-500/5 font-sans">
-                          <td className="px-4 py-2 font-bold text-amber-900 dark:text-amber-400">{t.diagonalHindi}</td>
-                          <td className="px-4 py-2 text-right font-medium text-amber-800 dark:text-amber-500">{t.precisionLine}</td>
-                          <td className="px-4 py-2 text-right font-bold text-amber-900 dark:text-amber-400 font-mono">{dimensions.diagonalBD.toFixed(2)}</td>
+                        <tr className="bg-brand-500/5 font-sans">
+                          <td className="px-4 py-2 font-bold text-brand-900 dark:text-brand-400">{t.diagonalHindi}</td>
+                          <td className="px-4 py-2 text-right font-medium text-brand-800 dark:text-brand-500">{t.precisionLine}</td>
+                          <td className="px-4 py-2 text-right font-bold text-brand-900 dark:text-brand-400 font-mono">{dimensions.diagonalBD.toFixed(2)}</td>
                         </tr>
                       )}
                     </tbody>
@@ -440,7 +440,7 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
               <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">Calculation & Area Outputs</span>
               <div className="bg-stone-900 text-white rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="space-y-1 text-center sm:text-left">
-                  <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
+                  <span className="text-[10px] text-brand-400 font-bold uppercase tracking-wider">
                     Computed Area ({method === 'average' ? t.methodAverageMode : t.methodTriangularMode})
                   </span>
                   <div className="text-2xl md:text-3xl font-extrabold tracking-tight font-mono text-white flex items-baseline justify-center sm:justify-start gap-1">
@@ -453,7 +453,7 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
 
                 <div className="text-center sm:text-right space-y-1">
                   <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">{t.equivalentIndiaBaseline}</span>
-                  <div className="text-xl font-bold font-mono text-amber-400">
+                  <div className="text-xl font-bold font-mono text-brand-400">
                     {areaInSqFt.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
                     <span className="text-xs font-normal text-stone-300 ml-1">sq ft</span>
                   </div>
@@ -519,7 +519,7 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
 
               <div className="space-y-4 text-right flex flex-col items-end">
                 <span className="text-stone-400 font-semibold uppercase text-[9px] block">{t.officialAssessmentSeal}</span>
-                <div className="w-16 h-16 rounded-full bg-amber-500/5 border-2 border-dashed border-amber-600/30 flex items-center justify-center text-amber-700 font-serif font-extrabold tracking-tighter text-sm transform rotate-12">
+                <div className="w-16 h-16 rounded-full bg-brand-500/5 border-2 border-dashed border-brand-600/30 flex items-center justify-center text-brand-700 font-serif font-extrabold tracking-tighter text-sm transform rotate-12">
                   BHUMI MAP
                 </div>
                 <p className="text-[9px] text-stone-400 font-medium italic">{t.verifiedDigitally}</p>

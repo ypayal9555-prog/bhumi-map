@@ -43,7 +43,7 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
           darkMode ? 'border-stone-800 bg-stone-850' : 'border-stone-200 bg-stone-50'
         }`}>
           <div className="flex items-center gap-2">
-            <Book className="w-5 h-5 text-amber-600" />
+            <Book className="w-5 h-5 text-brand-600" />
             <h2 className={`font-bold text-sm tracking-wide uppercase ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
               {t.bilingualFormulaGuide}
             </h2>
@@ -66,7 +66,7 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
             <h3 className={`font-bold text-base flex items-center gap-1.5 border-b pb-2 ${
               darkMode ? 'text-stone-100 border-stone-800' : 'text-stone-900 border-stone-100'
             }`}>
-              <Sparkles className="w-4 h-4 text-amber-600" />
+              <Sparkles className="w-4 h-4 text-brand-600" />
               <span>{t.baseSurveyUnits}</span>
             </h3>
             <p className={darkMode ? 'text-stone-450' : 'text-stone-650'}>
@@ -81,7 +81,7 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
                   Feet (फीट)
                 </span>
                 <p className={`text-xs ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{t.feetDesc}</p>
-                <code className="block text-[11px] text-amber-500 font-mono font-bold mt-1">1 sq ft = 1 sq ft</code>
+                <code className="block text-[11px] text-brand-500 font-mono font-bold mt-1">1 sq ft = 1 sq ft</code>
               </div>
 
               <div className={`p-3 border rounded-xl space-y-1 ${
@@ -91,7 +91,7 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
                   Links (कड़ी)
                 </span>
                 <p className={`text-xs ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{t.linksDesc}</p>
-                <code className="block text-[11px] text-amber-500 font-mono font-bold mt-1">1 sq link = 0.4356 sq ft</code>
+                <code className="block text-[11px] text-brand-500 font-mono font-bold mt-1">1 sq link = 0.4356 sq ft</code>
               </div>
 
               <div className={`p-3 border rounded-xl space-y-1 ${
@@ -101,7 +101,7 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
                   Lattha (लाठ्ठा / गट्ठा)
                 </span>
                 <p className={`text-xs ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{t.latthaDesc}</p>
-                <code className="block text-[11px] text-amber-500 font-mono font-bold mt-1">1 sq Lattha = 43.56 sq ft</code>
+                <code className="block text-[11px] text-brand-500 font-mono font-bold mt-1">1 sq Lattha = 43.56 sq ft</code>
               </div>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
             <h3 className={`font-bold text-base flex items-center gap-1.5 border-b pb-2 ${
               darkMode ? 'text-stone-100 border-stone-800' : 'text-stone-900 border-stone-100'
             }`}>
-              <HelpCircle className="w-4 h-4 text-amber-600" />
+              <HelpCircle className="w-4 h-4 text-brand-600" />
               <span>{t.formulaMethodsCompared}</span>
             </h3>
 
@@ -124,14 +124,14 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
                   {t.villageAverageIntro}
                 </p>
                 <div className={`p-2.5 rounded-lg font-mono text-xs ${
-                  darkMode ? 'bg-stone-950 text-amber-400' : 'bg-amber-500/5 text-amber-950'
+                  darkMode ? 'bg-stone-950 text-brand-400' : 'bg-brand-500/5 text-brand-950'
                 }`}>
                   {t.averageFormula}
                 </div>
                 <div className={`flex gap-2 items-start text-xs p-2.5 rounded-lg mt-1 border ${
-                  darkMode ? 'bg-amber-950/20 border-amber-900 text-amber-300' : 'bg-amber-500/5 border-amber-200 text-amber-850'
+                  darkMode ? 'bg-brand-950/20 border-brand-900 text-brand-300' : 'bg-brand-500/5 border-brand-200 text-brand-800'
                 }`}>
-                  <AlertTriangle className="w-4.5 h-4.5 text-amber-600 shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-4.5 h-4.5 text-brand-600 shrink-0 mt-0.5" />
                   <p>
                     <strong>{t.calculationBiasWarning}</strong> {t.biasWarningDesc}
                   </p>
@@ -146,7 +146,7 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
                   {t.exactTriangularIntro}
                 </p>
                 <div className={`p-2.5 rounded-lg font-mono text-xs space-y-1 ${
-                  darkMode ? 'bg-stone-950 text-amber-400' : 'bg-amber-500/5 text-amber-950'
+                  darkMode ? 'bg-stone-950 text-brand-400' : 'bg-brand-500/5 text-brand-950'
                 }`}>
                   <p>Semi-perimeter (s) = (a + b + c) / 2</p>
                   <p>Triangle Area = √[s × (s - a) × (s - b) × (s - c)]</p>
@@ -164,7 +164,7 @@ export default function GuideModal({ isOpen, onClose, darkMode, language, t }: G
             <h3 className={`font-bold text-base flex items-center gap-1.5 border-b pb-2 ${
               darkMode ? 'text-stone-100 border-stone-800' : 'text-stone-900 border-stone-100'
             }`}>
-              <Book className="w-4 h-4 text-amber-600" />
+              <Book className="w-4 h-4 text-brand-600" />
               <span>{t.indianLandUnitsGlossary}</span>
             </h3>
             <p className={darkMode ? 'text-stone-450' : 'text-stone-650'}>

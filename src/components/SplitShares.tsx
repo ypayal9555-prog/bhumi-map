@@ -49,7 +49,7 @@ export default function SplitShares({
       darkMode ? 'bg-stone-900 border-stone-800' : 'bg-stone-50 border-stone-200'
     }`}>
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-700">
+        <div className="w-10 h-10 rounded-full bg-brand-500/10 flex items-center justify-center text-brand-700 dark:text-brand-300">
           <Users className="w-5 h-5" />
         </div>
         <div>
@@ -85,7 +85,7 @@ export default function SplitShares({
               min="1"
               value={sharesCount}
               onChange={handleInputChange}
-              className={`w-full text-center border focus:border-amber-500 focus:ring-1 focus:ring-amber-500 rounded-xl p-3 text-sm font-semibold font-mono ${
+              className={`w-full text-center border focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded-xl p-3 text-sm font-semibold font-mono ${
                 darkMode
                   ? 'bg-stone-850 border-stone-700 text-stone-100 focus:bg-stone-950'
                   : 'bg-white border-stone-200 text-stone-900 focus:bg-white'
@@ -106,17 +106,17 @@ export default function SplitShares({
         </div>
 
         <div className={`p-4 rounded-xl border flex justify-between items-center transition-all ${
-          darkMode ? 'bg-amber-500/10 border-amber-500/20' : 'bg-amber-500/5 border-amber-500/10'
+          darkMode ? 'bg-brand-500/10 border-brand-500/20' : 'bg-brand-500/5 border-brand-500/10'
         }`}>
           <div>
             <span className={`text-xs font-medium block ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
               {t.shareEach}
             </span>
-            <span className="text-xl font-bold text-amber-700 dark:text-amber-400">
+            <span className="text-xl font-bold text-brand-700 dark:text-brand-400">
               {shareValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
-          <span className="text-[10px] font-bold text-white bg-amber-600 px-2 py-1 rounded tracking-wide uppercase">
+          <span className="text-[10px] font-bold text-white bg-brand-600 px-2 py-1 rounded tracking-wide uppercase">
             {activeUnitLabel}
           </span>
         </div>

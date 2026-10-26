@@ -312,7 +312,7 @@ export default function SarvguniyaReportModal({
           darkMode ? 'bg-stone-950 text-stone-100 border-b border-stone-800' : 'bg-stone-900 text-white'
         }`}>
           <div className="flex items-center gap-2">
-            <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
+            <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5 text-brand-500" />
             <h2 className="font-bold text-xs sm:text-sm tracking-wide uppercase truncate max-w-[180px] sm:max-w-none">{l.reportTitle}</h2>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
@@ -320,7 +320,7 @@ export default function SarvguniyaReportModal({
               onClick={handlePrint}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.02 }}
-              className="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1.5 sm:px-4 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none"
+              className="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1.5 sm:px-4 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>{l.printBtn}</span>
@@ -339,10 +339,10 @@ export default function SarvguniyaReportModal({
 
         {/* Share Banner (Excluded during print) */}
         {results && results.isComplete && (
-          <div className="no-print px-4 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-300 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-amber-500/5 border-amber-500/10">
+          <div className="no-print px-4 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-300 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-brand-500/5 border-brand-500/10">
             <div className="space-y-0.5">
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-amber-800 dark:text-amber-400">
-                {language === 'hi' ? '📱 रिपोर्ट शेयर करें' : '📱 Share Survey Report'}
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-brand-800 dark:text-brand-400">
+                {language === 'hi' ? 'रिपोर्ट शेयर करें' : 'Share Survey Report'}
               </h3>
               <p className="text-[10px] sm:text-[11px] text-stone-500 dark:text-stone-400">
                 {language === 'hi' 
@@ -379,7 +379,7 @@ export default function SarvguniyaReportModal({
               {/* Native / System Share */}
               <button
                 onClick={handleShare}
-                className="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none shadow-sm shadow-amber-600/10"
+                className="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none shadow-sm shadow-brand-600/10"
               >
                 <Share2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 <span>{language === 'hi' ? 'अन्य ऐप्स' : 'Share Direct'}</span>
@@ -402,19 +402,19 @@ export default function SarvguniyaReportModal({
             }`}
           >
             {/* Elegant watermark background pattern for printing authenticity */}
-            <div className="absolute inset-0 bg-radial-gradient from-transparent to-stone-50/10 pointer-events-none"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-stone-50/10 pointer-events-none"></div>
 
             {/* Certificate Header */}
             <div className={`text-center space-y-1.5 border-b pb-4 sm:pb-6 relative ${darkMode ? 'border-stone-800' : 'border-stone-200'}`}>
-              <span className="text-[10px] sm:text-xs tracking-widest text-amber-650 dark:text-amber-500 font-bold uppercase block">{l.officialMapAssessment}</span>
+              <span className="text-[10px] sm:text-xs tracking-widest text-brand-700 dark:text-brand-500 font-bold uppercase block">{l.officialMapAssessment}</span>
               <h1 className={`text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-serif uppercase ${darkMode ? 'text-stone-100' : 'text-stone-950'}`}>{l.certTitle}</h1>
               <p className={`text-[10px] sm:text-xs font-medium tracking-wide leading-relaxed ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
                 {l.subTitle}
               </p>
               <div className="flex justify-center items-center gap-2 mt-2">
-                <span className="h-0.5 w-10 sm:w-12 bg-amber-600"></span>
-                <Award className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
-                <span className="h-0.5 w-10 sm:w-12 bg-amber-600"></span>
+                <span className="h-0.5 w-10 sm:w-12 bg-brand-600"></span>
+                <Award className="w-4 h-4 sm:w-5 sm:h-5 text-brand-600" />
+                <span className="h-0.5 w-10 sm:w-12 bg-brand-600"></span>
               </div>
             </div>
 
@@ -442,7 +442,7 @@ export default function SarvguniyaReportModal({
 
             {!results || !results.isComplete ? (
               <div className="py-8 sm:py-12 px-4 text-center max-w-md mx-auto space-y-4">
-                <div className="inline-flex items-center justify-center p-3 bg-amber-500/10 text-amber-600 rounded-full">
+                <div className="inline-flex items-center justify-center p-3 bg-brand-500/10 text-brand-600 rounded-full">
                   <Compass className="w-8 h-8 animate-pulse" />
                 </div>
                 <h3 className={`text-base sm:text-lg font-bold tracking-tight ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
@@ -545,7 +545,7 @@ export default function SarvguniyaReportModal({
                       <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">{l.calculatedArea}</span>
                       <div className="bg-stone-900 text-white rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
                         <div className="space-y-1 text-center sm:text-left">
-                          <span className="text-[9px] sm:text-[10px] text-amber-400 font-bold uppercase tracking-wider">
+                          <span className="text-[9px] sm:text-[10px] text-brand-400 font-bold uppercase tracking-wider">
                             {language === 'hi' ? 'कुल क्षेत्रफल (ग्राम औसत विधि)' : 'Total Ground Area (Village Avg)'}
                           </span>
                           <div className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-mono text-white flex items-baseline justify-center sm:justify-start gap-1">
@@ -560,7 +560,7 @@ export default function SarvguniyaReportModal({
                           <span className="text-[9px] sm:text-[10px] text-stone-400 font-bold uppercase tracking-wider">
                             {language === 'hi' ? 'वर्ग मीटर रूपांतरण' : 'Square Meter Eq.'}
                           </span>
-                          <div className="text-lg sm:text-xl font-bold font-mono text-amber-400">
+                          <div className="text-lg sm:text-xl font-bold font-mono text-brand-400">
                             {results.area.sqM.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                             <span className="text-xs font-normal text-stone-300 ml-1">sq m</span>
                           </div>
@@ -574,13 +574,13 @@ export default function SarvguniyaReportModal({
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 text-xs">
                         <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
                           <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'बिस्वा (Biswa)' : 'Biswa'}</span>
-                          <p className="text-sm sm:text-base font-extrabold font-mono text-amber-600 dark:text-amber-500">{results.area.biswa.toFixed(2)}</p>
+                          <p className="text-sm sm:text-base font-extrabold font-mono text-brand-600 dark:text-brand-500">{results.area.biswa.toFixed(2)}</p>
                           <span className="text-[8px] text-stone-400 font-medium">{SQFT_PER_BISWA.toLocaleString('en-IN')} sq ft</span>
                         </div>
 
                         <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
                           <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'बीघा (Bigha)' : 'Bigha'}</span>
-                          <p className="text-sm sm:text-base font-extrabold font-mono text-amber-600 dark:text-amber-500">{results.area.bigha.toFixed(3)}</p>
+                          <p className="text-sm sm:text-base font-extrabold font-mono text-brand-600 dark:text-brand-500">{results.area.bigha.toFixed(3)}</p>
                           <span className="text-[8px] text-stone-400 font-medium">{BISWA_PER_BIGHA} Biswa</span>
                         </div>
 

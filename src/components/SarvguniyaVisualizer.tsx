@@ -176,12 +176,12 @@ export function GuniyaRulerVisualizer({
       {/* Title block */}
       <div className="flex items-center justify-between border-b pb-3 border-stone-250 dark:border-stone-800">
         <div className="flex items-center gap-2">
-          <Ruler className="w-4 h-4 text-amber-600" />
+          <Ruler className="w-4 h-4 text-brand-600" />
           <span className="text-xs font-bold uppercase tracking-wider">
             {language === 'hi' ? 'पारंपरिक सर्वगुनिया स्केल सिम्युलेटर' : 'Patwari Sarvguniya Scale Simulator'}
           </span>
         </div>
-        <div className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-amber-500/10 text-amber-600 dark:text-amber-500 border border-amber-500/20">
+        <div className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-brand-500/10 text-brand-600 dark:text-brand-500 border border-brand-500/20">
           {scale === '1/4000' ? '1:4000' : scale === '32inch' ? '32" = 1 Mile' : '16" = 1 Mile'}
         </div>
       </div>
@@ -194,7 +194,7 @@ export function GuniyaRulerVisualizer({
       </p>
 
       {/* Authentic Map & Ruler Visual Area */}
-      <div className="relative rounded-xl overflow-hidden p-4 bg-radial-gradient from-stone-50 to-stone-100 dark:from-stone-950 dark:to-stone-900 border border-stone-250 dark:border-stone-850 h-44 flex flex-col justify-center select-none">
+      <div className="relative rounded-xl overflow-hidden p-4 bg-gradient-to-b from-stone-50 to-stone-100 dark:from-stone-950 dark:to-stone-900 border border-stone-250 dark:border-stone-850 h-44 flex flex-col justify-center select-none">
         
         {/* Subtle Cadastral Map Watermark Background */}
         <div className="absolute inset-0 text-stone-600 dark:text-stone-400 opacity-[0.12] dark:opacity-[0.04] pointer-events-none flex items-center justify-center font-serif text-[10px]">
@@ -214,14 +214,14 @@ export function GuniyaRulerVisualizer({
         </div>
 
         {/* The Guniya Ruler Drawing */}
-        <div className="relative mx-auto w-full max-w-[460px] h-16 bg-gradient-to-b from-amber-100/90 to-amber-200/95 dark:from-amber-950 dark:to-stone-900 border-y-2 border-x-4 border-amber-600/40 dark:border-amber-500/30 rounded-sm backdrop-blur-md shadow-lg shadow-amber-600/5 flex flex-col justify-between p-0.5 relative">
+        <div className="relative mx-auto w-full max-w-[460px] h-16 bg-gradient-to-b from-brand-100/90 to-brand-200/95 dark:from-brand-950 dark:to-stone-900 border-y-2 border-x-4 border-brand-600/40 dark:border-brand-500/30 rounded-sm backdrop-blur-md shadow-lg shadow-brand-600/5 flex flex-col justify-between p-0.5 relative">
           
           {/* Glassmorphism glaze highlight line */}
           <div className="absolute top-0 inset-x-0 h-[1px] bg-white/40"></div>
           
           {/* Brass Rivets on Left and Right Ends (Traditional detail) */}
-          <div className="absolute left-1.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-yellow-300 via-amber-500 to-amber-700 shadow-sm border border-yellow-200"></div>
-          <div className="absolute right-1.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-yellow-300 via-amber-500 to-amber-700 shadow-sm border border-yellow-200"></div>
+          <div className="absolute left-1.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-yellow-300 via-brand-500 to-brand-700 shadow-sm border border-yellow-200"></div>
+          <div className="absolute right-1.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-yellow-300 via-brand-500 to-brand-700 shadow-sm border border-yellow-200"></div>
 
           {/* Top Ticks */}
           <div className="flex justify-between items-start px-8 h-5">
@@ -232,9 +232,9 @@ export function GuniyaRulerVisualizer({
 
               return (
                 <div key={`top-${idx}`} className="flex flex-col items-center">
-                  <div className={`w-[1px] bg-amber-950/80 dark:bg-amber-100 ${h}`}></div>
+                  <div className={`w-[1px] bg-brand-950/80 dark:bg-brand-100 ${h}`}></div>
                   {t.type === 'major' && (
-                    <span className="text-[7px] font-bold font-mono text-amber-950 dark:text-amber-200 mt-0.5">
+                    <span className="text-[7px] font-bold font-mono text-brand-950 dark:text-brand-200 mt-0.5">
                       {t.value}
                     </span>
                   )}
@@ -244,7 +244,7 @@ export function GuniyaRulerVisualizer({
           </div>
 
           {/* Instrument Branding in middle */}
-          <div className="text-center text-[8px] font-black tracking-widest text-amber-900 dark:text-amber-300 uppercase opacity-80">
+          <div className="text-center text-[8px] font-black tracking-widest text-brand-900 dark:text-brand-300 uppercase opacity-80">
             {info.name}
           </div>
 
@@ -258,11 +258,11 @@ export function GuniyaRulerVisualizer({
               return (
                 <div key={`bottom-${idx}`} className="flex flex-col items-center justify-end">
                   {t.type === 'major' && (
-                    <span className="text-[7px] font-bold font-mono text-amber-950 dark:text-amber-200 mb-0.5">
+                    <span className="text-[7px] font-bold font-mono text-brand-950 dark:text-brand-200 mb-0.5">
                       {t.value}
                     </span>
                   )}
-                  <div className={`w-[1px] bg-amber-950/80 dark:bg-amber-100 ${h}`}></div>
+                  <div className={`w-[1px] bg-brand-950/80 dark:bg-brand-100 ${h}`}></div>
                 </div>
               );
             })}
@@ -280,7 +280,7 @@ export function GuniyaRulerVisualizer({
 
         {/* Real-time slider reading label */}
         <div className="text-center mt-3 font-mono text-xs font-bold text-stone-800 dark:text-stone-200">
-          {language === 'hi' ? 'पाठ्यांक (Reading):' : 'Measured:'} <span className="text-amber-600 text-sm font-extrabold">{reading} {info.unit}</span>
+          {language === 'hi' ? 'पाठ्यांक (Reading):' : 'Measured:'} <span className="text-brand-600 text-sm font-extrabold">{reading} {info.unit}</span>
         </div>
       </div>
 
@@ -296,7 +296,7 @@ export function GuniyaRulerVisualizer({
           max={info.max}
           value={reading}
           onChange={(e) => setReading(parseInt(e.target.value))}
-          className="w-full h-2 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-ew-resize accent-amber-600"
+          className="w-full h-2 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-ew-resize accent-brand-600"
         />
       </div>
 
@@ -325,8 +325,8 @@ export function GuniyaRulerVisualizer({
       </div>
 
       {/* Calibration note */}
-      <div className="flex items-start gap-2 text-[10px] text-stone-600 dark:text-stone-400 bg-amber-500/10 dark:bg-amber-500/5 p-2.5 border border-amber-500/20 dark:border-amber-500/10 rounded-xl leading-normal">
-        <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+      <div className="flex items-start gap-2 text-[10px] text-stone-600 dark:text-stone-400 bg-brand-500/10 dark:bg-brand-500/5 p-2.5 border border-brand-500/20 dark:border-brand-500/10 rounded-xl leading-normal">
+        <Info className="w-3.5 h-3.5 text-brand-600 shrink-0 mt-0.5" />
         <span>
           {info.desc}. {language === 'hi' ? 'गाँव के भू-अभिलेखों (Sajra Map) में इसी स्केल के माध्यम से रकबा निकाला जाता है।' : 'Amins use this exact scale overlay for calculating fields on maps.'}
         </span>
@@ -429,7 +429,7 @@ export function SarvguniyaPlotVisualizer({
       {/* Visualizer header */}
       <div className="flex items-center justify-between border-b pb-3 border-stone-250 dark:border-stone-800">
         <div className="flex items-center gap-2">
-          <Compass className="w-4 h-4 text-amber-600 animate-spin-slow" />
+          <Compass className="w-4 h-4 text-brand-600 animate-spin-slow" />
           <span className="text-xs font-bold uppercase tracking-wider">
             {language === 'hi' ? 'भू-मानचित्र आकृति विज़ुअलाइज़र' : 'Ground Shape & Formula Outline'}
           </span>
@@ -440,12 +440,12 @@ export function SarvguniyaPlotVisualizer({
       </div>
 
       {/* SVG Canvas depicting the plotted shape */}
-      <div className="relative rounded-xl border border-stone-250 dark:border-stone-850 overflow-hidden bg-radial-gradient from-stone-50 to-stone-100 dark:from-stone-950 dark:to-stone-900 p-4 h-[260px] flex items-center justify-center select-none">
+      <div className="relative rounded-xl border border-stone-250 dark:border-stone-850 overflow-hidden bg-gradient-to-b from-stone-50 to-stone-100 dark:from-stone-950 dark:to-stone-900 p-4 h-[260px] flex items-center justify-center select-none">
         
         {/* Plot Details watermark paper */}
         <div className="absolute top-2.5 left-3 text-[9px] font-bold font-mono text-stone-500/90 dark:text-stone-400/80 uppercase space-y-0.5">
-          <p>📍 QUAD PLOT: ABCD</p>
-          <p>📐 LAW: PATWARI AVERAGE AXES</p>
+          <p>QUAD PLOT: ABCD</p>
+          <p>LAW: PATWARI AVERAGE AXES</p>
         </div>
 
         <svg width="100%" height="100%" viewBox="0 0 320 240" className="w-full h-full">
@@ -468,7 +468,7 @@ export function SarvguniyaPlotVisualizer({
           {/* Polygon Shade Area */}
           <polygon
             points={`${pA.x},${pA.y} ${pB.x},${pB.y} ${pC.x},${pC.y} ${pD.x},${pD.y}`}
-            className="fill-amber-500/10 stroke-amber-600 dark:stroke-amber-500 stroke-2"
+            className="fill-brand-500/10 stroke-brand-600 dark:stroke-brand-500 stroke-2"
           />
 
           {/* Average length formula axes drawing (midpoint lines) */}
@@ -504,7 +504,7 @@ export function SarvguniyaPlotVisualizer({
                   cx={p.x}
                   cy={p.y}
                   r="4.5"
-                  className="fill-amber-600 dark:fill-amber-500 stroke-white dark:stroke-stone-900 stroke-2"
+                  className="fill-brand-600 dark:fill-brand-500 stroke-white dark:stroke-stone-900 stroke-2"
                 />
                 <text
                   x={p.id === 'A' || p.id === 'D' ? p.x - 12 : p.x + 12}
@@ -519,8 +519,8 @@ export function SarvguniyaPlotVisualizer({
           })}
 
           {/* Midpoint labels (Averages values) */}
-          <circle cx={midDA.x + (midBC.x - midDA.x) / 3} cy={midDA.y + (midBC.y - midDA.y) / 3} r="1.5" className="fill-amber-600" />
-          <circle cx={midAB.x + (midCD.x - midAB.x) / 3} cy={midAB.y + (midCD.y - midAB.y) / 3} r="1.5" className="fill-amber-600" />
+          <circle cx={midDA.x + (midBC.x - midDA.x) / 3} cy={midDA.y + (midBC.y - midDA.y) / 3} r="1.5" className="fill-brand-600" />
+          <circle cx={midAB.x + (midCD.x - midAB.x) / 3} cy={midAB.y + (midCD.y - midAB.y) / 3} r="1.5" className="fill-brand-600" />
 
           {/* SVG side labels centered exactly on side lines */}
           {renderSvgLabel(midAB.x, midAB.y - 12, `BC: ${results.distances.BC.meters.toFixed(1)}${lengthUnitLabel}`)}
@@ -532,10 +532,10 @@ export function SarvguniyaPlotVisualizer({
 
       {/* Dedicated Total Calculated Area Badge (Outside Canvas to prevent overlap) */}
       <div className={`p-3.5 rounded-xl border flex items-center justify-between transition-all duration-300 ${
-        darkMode ? 'bg-amber-500/5 border-amber-500/10 text-stone-300' : 'bg-amber-50/60 border-amber-500/15 text-stone-800'
+        darkMode ? 'bg-brand-500/5 border-brand-500/10 text-stone-300' : 'bg-brand-50/60 border-brand-500/15 text-stone-800'
       }`}>
         <div className="space-y-0.5">
-          <span className="text-[9px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest block">
+          <span className="text-[9px] font-bold text-brand-600 dark:text-brand-500 uppercase tracking-widest block">
             {language === 'hi' ? 'कुल रकबा (Total Area)' : 'Total Calculated Area'}
           </span>
           <p className="text-[10px] text-stone-500 dark:text-stone-400">
@@ -543,7 +543,7 @@ export function SarvguniyaPlotVisualizer({
           </p>
         </div>
         <div className="text-right">
-          <span className="text-sm font-black font-mono text-amber-600 dark:text-amber-500 block">
+          <span className="text-sm font-black font-mono text-brand-600 dark:text-brand-500 block">
             {results.area.sqF.toLocaleString(undefined, { maximumFractionDigits: 1 })} sq ft
           </span>
           <span className="text-[10px] font-bold font-mono text-stone-500 dark:text-stone-400 block">
@@ -553,13 +553,13 @@ export function SarvguniyaPlotVisualizer({
       </div>
 
       {/* Axis Information explaining Patwari Calculation */}
-      <div className="grid grid-cols-2 gap-2 text-[10px] font-medium bg-amber-500/10 dark:bg-amber-500/5 p-3 border border-amber-500/20 dark:border-amber-500/10 rounded-xl leading-normal">
+      <div className="grid grid-cols-2 gap-2 text-[10px] font-medium bg-brand-500/10 dark:bg-brand-500/5 p-3 border border-brand-500/20 dark:border-brand-500/10 rounded-xl leading-normal">
         <div>
           <span className="text-stone-500 dark:text-stone-400 font-bold uppercase block text-[8px] mb-0.5">
             {language === 'hi' ? 'औसत लंबाई (Avg Axis L)' : 'Average Length Axis'}
           </span>
           <p className="font-bold text-stone-700 dark:text-stone-300">
-            (AB + CD) ÷ 2 = <span className="font-mono text-amber-600 font-black">{results.averages.lengthM.toFixed(1)} m</span>
+            (AB + CD) ÷ 2 = <span className="font-mono text-brand-600 font-black">{results.averages.lengthM.toFixed(1)} m</span>
           </p>
         </div>
         <div>
@@ -567,7 +567,7 @@ export function SarvguniyaPlotVisualizer({
             {language === 'hi' ? 'औसत चौड़ाई (Avg Axis W)' : 'Average Width Axis'}
           </span>
           <p className="font-bold text-stone-700 dark:text-stone-300">
-            (BC + DA) ÷ 2 = <span className="font-mono text-amber-600 font-black">{results.averages.widthM.toFixed(1)} m</span>
+            (BC + DA) ÷ 2 = <span className="font-mono text-brand-600 font-black">{results.averages.widthM.toFixed(1)} m</span>
           </p>
         </div>
       </div>
