@@ -6,7 +6,7 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { DimensionValues, MeasuringUnit, CalculationMethod, LAND_UNITS } from '../types';
-import { Printer, X, Award, FileSpreadsheet, Share2, Copy, Check, Send } from 'lucide-react';
+import { Printer, X, FileSpreadsheet, Share2, Copy, Check, Send } from 'lucide-react';
 import { getCoordinatesFromDimensions } from '../geometryUtils';
 import { SQFT_PER_BISWA, SQFT_PER_BIGHA, SQFT_PER_ACRE } from '../units';
 import { Language } from '../locales';
@@ -25,6 +25,106 @@ interface ReportModalProps {
   t: any;
 }
 
+/**
+ * Paper palette for the certificate.
+ *
+ * Everything inside the card reads colour from these variables, so the screen
+ * theme and the printed sheet stay independent: on screen the card follows
+ * dark mode, on paper it is always cream. Printing a dark-mode dashboard would
+ * otherwise dump a full page of ink.
+ */
+const PAPER_LIGHT = {
+  '--paper': '#FBF7EC',
+  '--paper-2': '#F4EEE0',
+  '--ink': '#1A1713',
+  '--ink-soft': '#4E473A',
+  '--ink-faint': '#8A8070',
+  '--rule': '#E0D5BC',
+  '--rule-strong': '#B08D4C',
+  '--seal': '#0A4B37',
+} as React.CSSProperties;
+
+const PAPER_DARK = {
+  '--paper': '#17140F',
+  '--paper-2': '#201C16',
+  '--ink': '#F5F2E9',
+  '--ink-soft': '#D4CCB9',
+  '--ink-faint': '#948B77',
+  '--rule': '#3A342A',
+  '--rule-strong': '#C8A96C',
+  '--seal': '#86BCA5',
+} as React.CSSProperties;
+
+/** Brass rule that fades out at both ends — used to separate certificate bands. */
+function Hairline({ strong = false }: { strong?: boolean }) {
+  return (
+    <div
+      className="h-px w-full"
+      style={{
+        background: strong
+          ? 'linear-gradient(to right, transparent, var(--rule-strong), transparent)'
+          : 'linear-gradient(to right, transparent, var(--rule), transparent)',
+      }}
+    />
+  );
+}
+
+/** Circular revenue-style stamp, drawn rather than typed so it stays crisp in print. */
+function Seal() {
+  return (
+    <svg viewBox="0 0 96 96" className="w-[76px] h-[76px]" aria-hidden="true">
+      <circle cx="48" cy="48" r="45.5" fill="none" stroke="var(--rule-strong)" strokeWidth="1.4" />
+      <circle cx="48" cy="48" r="41" fill="none" stroke="var(--rule-strong)" strokeWidth="0.5" />
+      <circle
+        cx="48"
+        cy="48"
+        r="30"
+        fill="none"
+        stroke="var(--rule-strong)"
+        strokeWidth="0.7"
+        strokeDasharray="2 2.4"
+      />
+      {/* Text sits on a 34-unit radius arc; the string is kept short so it cannot
+          run past the 180° of the top arc and collide with the inner ring. */}
+      <path id="bm-seal-arc" d="M 13,48 A 35,35 0 0 1 83,48" fill="none" />
+      <text
+        fontSize="6.8"
+        letterSpacing="2"
+        fontWeight="700"
+        fill="var(--rule-strong)"
+        fontFamily="Inter, sans-serif"
+      >
+        <textPath href="#bm-seal-arc" startOffset="50%" textAnchor="middle">
+          BHUMI MAP
+        </textPath>
+      </text>
+      <text
+        x="48"
+        y="53"
+        textAnchor="middle"
+        fontSize="19"
+        fontWeight="600"
+        fill="var(--seal)"
+        fontFamily="Fraunces, Georgia, serif"
+      >
+        भूमि
+      </text>
+      <rect x="36" y="59" width="24" height="0.7" fill="var(--rule-strong)" opacity="0.6" />
+      <text
+        x="48"
+        y="68"
+        textAnchor="middle"
+        fontSize="5.2"
+        letterSpacing="1.6"
+        fill="var(--ink-faint)"
+        fontFamily="Inter, sans-serif"
+      >
+        VERIFIED
+      </text>
+    </svg>
+  );
+}
+
 export default function ReportModal({
   isOpen,
   onClose,
@@ -40,6 +140,10 @@ export default function ReportModal({
 }: ReportModalProps) {
   const printAreaRef = useRef<HTMLDivElement | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // A survey number must not change while the certificate is on screen. Deriving
+  // it on every render made it flicker whenever any state changed (copy, share).
+  const [surveyId] = useState(() => `BM-${Math.floor(100000 + Math.random() * 900000)}`);
 
   if (!isOpen) return null;
 
@@ -69,7 +173,7 @@ export default function ReportModal({
     const acreVal = areaInSqFt / SQFT_PER_ACRE;
     const unitSuffix = getUnitSuffix();
     const unitLabel = getUnitLabel();
-    
+
     if (language === 'hi') {
       return `🌾 *भू-मापन प्रमाण पत्र रिपोर्ट* 🌾
 ----------------------------------
@@ -174,65 +278,167 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
   const pC = points.find((p) => p.id === 'C')!;
   const pD = points.find((p) => p.id === 'D')!;
 
+  const paper = darkMode ? PAPER_DARK : PAPER_LIGHT;
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-sm flex justify-center items-center p-2 sm:p-4 animate-fadeIn">
-      {/* Dynamic Printing Style overrides to print ONLY the certificate and hide everything else */}
-      <style dangerouslySetInnerHTML={{ __html: `
+    <div
+      id="cert-overlay"
+      className="fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-sm flex justify-center items-center p-2 sm:p-4 animate-fadeIn"
+    >
+      {/* Print stylesheet: puts the certificate on paper regardless of the on-screen theme. */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         @media print {
-          body {
-            background: white !important;
-            color: black !important;
-            visibility: hidden;
+          /* The sheet is the card, edge to edge: no page margin, so the cream
+             paper reaches the paper edge and the frame is positioned inside. */
+          @page { size: A4 portrait; margin: 0; }
+
+          /*
+           * The dashboard behind the modal is only made invisible, not removed:
+           * it still occupies ~2300px of flow, and Chrome paginates on that,
+           * emitting two blank sheets after the certificate. Pinning the root
+           * box to one A4 page keeps the job at a single sheet.
+           */
+          html, body {
+            background: #fff !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 297mm !important;
+            overflow: hidden !important;
           }
-          #standard-print-card, #standard-print-card * {
-            visibility: visible;
-          }
-          #standard-print-card {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100% !important;
-            max-width: 100% !important;
-            border: none !important;
-            box-shadow: none !important;
-            background: white !important;
-            color: black !important;
+
+          body { visibility: hidden; }
+          #standard-print-card, #standard-print-card * { visibility: visible; }
+
+          /*
+           * Unwind the app shell before printing. The modal is a fixed overlay
+           * with a max-height and two scroll containers; every one of those
+           * clips, and clipped content is silently lost on paper instead of
+           * flowing onto a second sheet.
+           */
+          #cert-overlay {
+            position: static !important;
+            display: block !important;
             padding: 0 !important;
             margin: 0 !important;
+            background: none !important;
+            backdrop-filter: none !important;
           }
-          .no-print, button, [role="dialog"] button, svg {
-            display: none !important;
-          }
-          #standard-print-card svg {
+          #cert-shell {
             display: block !important;
-            visibility: visible !important;
+            max-height: none !important;
+            height: auto !important;
+            overflow: visible !important;
+            max-width: none !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
           }
-        }
-      `}} />
+          #print-area {
+            overflow: visible !important;
+            max-height: none !important;
+            padding: 0 !important;
+            background: none !important;
+          }
 
-      <div className={`rounded-2xl w-full max-w-4xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh] overflow-hidden border ${
-        darkMode ? 'bg-stone-900 border-stone-850' : 'bg-white border-stone-200'
-      }`}>
+          #standard-print-card {
+            /* Overrides the inline theme variables with the paper palette. */
+            --paper: #FBF7EC !important;
+            --paper-2: #F4EEE0 !important;
+            --ink: #1A1713 !important;
+            --ink-soft: #4E473A !important;
+            --ink-faint: #807665 !important;
+            --rule: #DDD1B6 !important;
+            --rule-strong: #A8843F !important;
+            --seal: #0A4B37 !important;
+
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 210mm !important;
+            max-width: none !important;
+            min-height: 297mm !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: var(--paper) !important;
+            color: var(--ink) !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+
+          /* 6mm keeps the frame clear of the dead zone most printers cannot
+             reach; the body padding keeps the type off the frame. */
+          #cert-frame-outer { inset: 6mm !important; }
+          #cert-frame-inner { inset: calc(6mm + 5px) !important; }
+          #cert-frame-corners { inset: calc(6mm + 10px) !important; }
+
+          /* On screen the body carries the modal's padding; on paper it carries
+             the sheet's own margins instead. 8mm/9mm leaves 726px of type width
+             on a 794px sheet — the width the layout was measured at. */
+          #cert-body { padding: 8mm 9mm !important; }
+
+          /*
+           * An A4 content box at 9mm margins is 726px wide — just under
+           * Tailwind's 768px md breakpoint. Left alone the certificate loses
+           * its side-by-side bands to a single column and runs almost two pages
+           * long, so its wide layout is pinned here for the sheet.
+           */
+          #cert-geometry {
+            grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+            gap: 1.25rem !important;
+            align-items: center !important;
+          }
+          #cert-geometry > div:first-child { grid-column: span 5 / span 5 !important; }
+          #cert-geometry > div:last-child { grid-column: span 7 / span 7 !important; }
+
+          #cert-conversions { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+
+          #standard-print-card svg { display: block !important; visibility: visible !important; }
+
+          .no-print, button { display: none !important; }
+
+          /* Keep the drawing and the figure table on one sheet. */
+          #standard-print-card table,
+          #standard-print-card svg { break-inside: avoid; }
+        }
+      `,
+        }}
+      />
+
+      <div
+        id="cert-shell"
+        className={`rounded-2xl w-full max-w-4xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh] overflow-hidden border ${
+          darkMode ? 'bg-stone-900 border-stone-850' : 'bg-white border-stone-200'
+        }`}
+      >
         {/* Modal Top Control Bar */}
-        <div className={`px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center ${
-          darkMode ? 'bg-stone-950 text-stone-100 border-b border-stone-800' : 'bg-stone-900 text-white'
-        }`}>
+        <div
+          className={`relative px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center ${
+            darkMode ? 'bg-stone-950 text-stone-100 border-b border-stone-800' : 'bg-stone-900 text-white'
+          }`}
+        >
+          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-400/50 to-transparent" />
           <div className="flex items-center gap-2">
-            <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5 text-brand-500" />
-            <h2 className="font-bold text-xs sm:text-sm tracking-wide uppercase truncate max-w-[180px] sm:max-w-none">{t.surveyReportTitle}</h2>
+            <FileSpreadsheet className="w-4 h-4 sm:w-5 sm:h-5 text-gold-400" />
+            <h2 className="font-semibold text-xs sm:text-sm tracking-[0.14em] uppercase truncate max-w-[180px] sm:max-w-none">
+              {t.surveyReportTitle}
+            </h2>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <motion.button
               onClick={handlePrint}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.02 }}
-              className="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1.5 sm:px-4 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none"
+              className="bg-brand-600 hover:bg-brand-500 text-white px-2.5 py-1.5 sm:px-4 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold tracking-wide transition-colors flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>{t.printPDF}</span>
             </motion.button>
-            <motion.button 
-              onClick={onClose} 
+            <motion.button
+              onClick={onClose}
               whileTap={{ scale: 0.9 }}
               className={`p-1 rounded transition-colors cursor-pointer select-none ${
                 darkMode ? 'hover:bg-stone-800 text-stone-400 hover:text-white' : 'hover:bg-stone-800 text-stone-400 hover:text-white'
@@ -244,25 +450,29 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
         </div>
 
         {/* Share Banner (Excluded during print) */}
-        <div className="no-print px-4 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-300 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-brand-500/5 border-brand-500/10">
+        <div
+          className={`no-print px-4 sm:px-6 py-3 sm:py-4 border-b transition-colors duration-300 flex flex-col md:flex-row md:items-center justify-between gap-3 ${
+            darkMode ? 'bg-stone-900 border-stone-800' : 'bg-stone-50 border-stone-200'
+          }`}
+        >
           <div className="space-y-0.5">
-            <h3 className="text-xs font-extrabold uppercase tracking-wider text-brand-800 dark:text-brand-400">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700 dark:text-brand-300">
               {language === 'hi' ? 'रिपोर्ट शेयर करें' : 'Share Survey Report'}
             </h3>
             <p className="text-[10px] sm:text-[11px] text-stone-500 dark:text-stone-400">
-              {language === 'hi' 
-                ? 'इस गणना रिपोर्ट को व्हाट्सएप या अन्य किसी भी ऐप पर तुरंत साझा करें।' 
+              {language === 'hi'
+                ? 'इस गणना रिपोर्ट को व्हाट्सएप या अन्य किसी भी ऐप पर तुरंत साझा करें।'
                 : 'Send this land survey report directly to WhatsApp or other apps.'}
             </p>
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-2">
             {/* Direct WhatsApp Share Link */}
             <a
               href={`https://api.whatsapp.com/send?text=${encodeURIComponent(getShareText())}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none shadow-sm shadow-emerald-600/10"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold transition-colors flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none"
             >
               <Send className="w-3 h-3 sm:w-3.5 sm:h-3.5 rotate-45 text-white" />
               <span>{language === 'hi' ? 'व्हाट्सएप (WhatsApp)' : 'WhatsApp'}</span>
@@ -271,20 +481,24 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
             {/* Clipboard Copy */}
             <button
               onClick={handleCopy}
-              className={`px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none border ${
+              className={`px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold transition-colors flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none border ${
                 copied
-                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                  : 'bg-stone-800 hover:bg-stone-700 border-stone-700 text-stone-200'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400'
+                  : 'bg-white hover:bg-stone-100 border-stone-300 text-stone-700 dark:bg-stone-800 dark:hover:bg-stone-750 dark:border-stone-700 dark:text-stone-200'
               }`}
             >
-              {copied ? <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-500" /> : <Copy className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
-              <span>{copied ? (language === 'hi' ? 'कॉपी हो गया!' : 'Copied!') : (language === 'hi' ? 'रिपोर्ट कॉपी करें' : 'Copy Report')}</span>
+              {copied ? (
+                <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 dark:text-emerald-400" />
+              ) : (
+                <Copy className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              )}
+              <span>{copied ? (language === 'hi' ? 'कॉपी हो गया!' : 'Copied!') : language === 'hi' ? 'रिपोर्ट कॉपी करें' : 'Copy Report'}</span>
             </button>
 
             {/* Native / System Share */}
             <button
               onClick={handleShare}
-              className="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none shadow-sm shadow-brand-600/10"
+              className="bg-brand-700 hover:bg-brand-800 dark:bg-brand-600 dark:hover:bg-brand-500 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold transition-colors flex items-center gap-1 sm:gap-1.5 cursor-pointer select-none"
             >
               <Share2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               <span>{language === 'hi' ? 'अन्य ऐप्स' : 'Share Direct'}</span>
@@ -293,239 +507,324 @@ ${dimensions.diagonalBD ? `• Diagonal BD: ${dimensions.diagonalBD} ${unitLabel
         </div>
 
         {/* Modal Body / Report Content Container */}
-        <div className={`flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 transition-colors duration-300 ${
-          darkMode ? 'bg-stone-950' : 'bg-stone-100'
-        }`} id="print-area" ref={printAreaRef}>
-          {/* Main report card */}
-          <div 
+        <div
+          className={`flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 transition-colors duration-300 ${
+            darkMode ? 'bg-stone-950' : 'bg-stone-100'
+          }`}
+          id="print-area"
+          ref={printAreaRef}
+        >
+          {/* ================= CERTIFICATE ================= */}
+          <div
             id="standard-print-card"
-            className={`border-4 border-double rounded-lg p-4 sm:p-6 md:p-10 shadow-sm max-w-3xl mx-auto space-y-6 sm:space-y-8 relative overflow-hidden print:border-none print:shadow-none transition-colors duration-300 ${
-              darkMode 
-                ? 'bg-stone-900 border-stone-800 text-stone-300' 
-                : 'bg-white border-stone-300 text-stone-700'
-            }`}
+            style={paper}
+            className="relative max-w-3xl mx-auto bg-[var(--paper)] text-[var(--ink)] shadow-sm print:shadow-none"
           >
-            {/* Elegant watermark background pattern for printing authenticity */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-stone-50/10 pointer-events-none"></div>
+            {/*
+             * Frame study. On screen these hug the card edge; in print the card
+             * becomes a full-bleed A4 sheet, so the print rules push the whole
+             * set inward to sit 6mm from the paper edge — inside the dead zone
+             * no printer can reach.
+             */}
+            <div id="cert-frame-outer" className="absolute inset-0 border border-[var(--rule-strong)]/70 pointer-events-none" />
+            <div id="cert-frame-inner" className="absolute inset-[5px] border border-[var(--rule)] pointer-events-none" />
 
-            {/* Certificate Header */}
-            <div className={`text-center space-y-2 border-b pb-6 relative ${darkMode ? 'border-stone-800' : 'border-stone-200'}`}>
-              <span className="text-xs tracking-widest text-brand-600 dark:text-brand-500 font-bold uppercase block">{t.officialMapAssessment}</span>
-              <h1 className={`text-2xl md:text-3xl font-extrabold tracking-tight font-serif uppercase ${darkMode ? 'text-stone-100' : 'text-stone-950'}`}>{t.bhumiMapCertificate}</h1>
-              <p className={`text-xs font-medium tracking-wide ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-                {t.landBoundaryReport}
-              </p>
-              <div className="flex justify-center items-center gap-2 mt-3">
-                <span className="h-0.5 w-12 bg-brand-600"></span>
-                <Award className="w-5 h-5 text-brand-600" />
-                <span className="h-0.5 w-12 bg-brand-600"></span>
-              </div>
+            {/* Corner ornaments */}
+            <div id="cert-frame-corners" className="absolute inset-[10px] pointer-events-none">
+              {[
+                'top-0 left-0 border-t border-l',
+                'top-0 right-0 border-t border-r',
+                'bottom-0 left-0 border-b border-l',
+                'bottom-0 right-0 border-b border-r',
+              ].map((pos) => (
+                <span key={pos} className={`absolute w-4 h-4 border-[var(--rule-strong)] ${pos}`} />
+              ))}
             </div>
 
-            {/* Report Metadata */}
-            <div className={`grid grid-cols-2 md:grid-cols-3 gap-4 text-xs border-b pb-5 ${darkMode ? 'border-stone-800' : 'border-stone-100'}`}>
-              <div className="space-y-1">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{t.dateOfAssessment}</span>
-                <span className={`font-bold font-mono ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{today}</span>
-              </div>
-              <div className="space-y-1">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{t.surveyId}</span>
-                <span className={`font-bold font-mono uppercase ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>BM-{Math.floor(100000 + Math.random() * 900000)}</span>
-              </div>
-              <div className="space-y-1 col-span-2 md:col-span-1">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{t.verificationStandard}</span>
-                <span className={`font-bold ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{t.standardIndianRevenue}</span>
-              </div>
-            </div>
-
-            {/* Geometry and Dimensions side-by-side */}
-            <div className={`grid grid-cols-1 md:grid-cols-12 gap-8 items-center border-b pb-6 ${darkMode ? 'border-stone-800' : 'border-stone-100'}`}>
-              {/* Left Column: Scaled Plot Drawing */}
-              <div className={`col-span-1 md:col-span-5 rounded-xl p-4 border flex flex-col items-center ${
-                darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-200'
-              }`}>
-                <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block mb-2">{t.registeredBoundaryLayout}</span>
-                <div className={`relative w-full aspect-[4/3] border rounded-lg overflow-hidden flex items-center justify-center ${
-                  darkMode ? 'bg-stone-950 border-stone-800' : 'bg-white border-stone-100'
-                }`}>
-                  {pA && pB && pC && pD && (
-                    <svg className="w-full h-full p-2" viewBox="0 0 300 220">
-                      <polygon
-                        points={`${pA.x * 0.75},${pA.y * 0.75} ${pB.x * 0.75},${pB.y * 0.75} ${pC.x * 0.75},${pC.y * 0.75} ${pD.x * 0.75},${pD.y * 0.75}`}
-                        fill={darkMode ? "rgba(200, 169, 108, 0.10)" : "rgba(12, 91, 66, 0.04)"}
-                        stroke={darkMode ? "#559b80" : "#0c5b42"}
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                      <line
-                        x1={pB.x * 0.75}
-                        y1={pB.y * 0.75}
-                        x2={pD.x * 0.75}
-                        y2={pD.y * 0.75}
-                        stroke={darkMode ? "#6b6353" : "#c6bda8"}
-                        strokeWidth="1"
-                        strokeDasharray="2 2"
-                      />
-                      {/* Vertex points */}
-                      {[pA, pB, pC, pD].map((pt) => (
-                        <g key={pt.id}>
-                          <circle cx={pt.x * 0.75} cy={pt.y * 0.75} r="4" fill="#b08d4c" stroke={darkMode ? "#100e0b" : "white"} strokeWidth="1" />
-                          <text
-                            x={pt.x * 0.75 + (pt.id === 'A' || pt.id === 'D' ? -8 : 8)}
-                            y={pt.y * 0.75 + (pt.id === 'A' || pt.id === 'B' ? -6 : 8)}
-                            fontSize="9"
-                            fontWeight="bold"
-                            fill={darkMode ? "#f5f2e9" : "#1a1713"}
-                            textAnchor="middle"
-                          >
-                            {pt.label}
-                          </text>
-                        </g>
-                      ))}
-                    </svg>
-                  )}
+            <div id="cert-body" className="relative px-6 sm:px-9 md:px-12 py-8 sm:py-10 md:py-12 space-y-5">
+              {/* ---------- Letterhead ---------- */}
+              <header className="text-center space-y-2.5">
+                <div className="flex items-center justify-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[var(--rule-strong)]" />
+                  <span className="text-[9px] font-semibold tracking-[0.42em] uppercase text-[var(--ink-soft)]">
+                    Bhumi Map
+                  </span>
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[var(--rule-strong)]" />
                 </div>
-              </div>
 
-              {/* Right Column: Dimensions Table */}
-              <div className="col-span-1 md:col-span-7 space-y-4">
-                <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">{t.registeredLengths}</span>
-                <div className={`overflow-hidden border rounded-xl ${darkMode ? 'border-stone-800' : 'border-stone-200'}`}>
-                  <table className="min-w-full divide-y divide-stone-200 text-xs">
-                    <thead className={darkMode ? 'bg-stone-800 text-stone-300 uppercase font-semibold' : 'bg-stone-50 text-stone-500 uppercase font-semibold'}>
-                      <tr>
-                        <th className="px-4 py-2 text-left">{t.boundarySide}</th>
-                        <th className="px-4 py-2 text-right">{t.direction}</th>
-                        <th className="px-4 py-2 text-right">{t.lengthUnit} ({getUnitLabel()})</th>
+                <div className="flex items-center gap-3">
+                  <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--rule-strong)]/70" />
+                  <span className="w-1 h-1 rotate-45 bg-[var(--rule-strong)]" />
+                  <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[var(--rule-strong)]/70" />
+                </div>
+
+                <h1 className="font-serif text-[1.55rem] sm:text-[1.85rem] md:text-[2rem] font-medium leading-[1.14] tracking-tight text-[var(--ink)]">
+                  {t.bhumiMapCertificate}
+                </h1>
+
+                <p className="text-[10px] sm:text-[11px] font-medium tracking-[0.24em] uppercase text-[var(--ink-faint)]">
+                  {t.landBoundaryReport}
+                </p>
+
+                <div className="pt-1">
+                  <span className="inline-block text-[8.5px] font-semibold tracking-[0.2em] uppercase text-[var(--rule-strong)] border-y border-[var(--rule)] px-3 py-1">
+                    {t.officialMapAssessment}
+                  </span>
+                </div>
+              </header>
+
+              {/* ---------- Record meta ---------- */}
+              <section className="grid grid-cols-3 gap-4">
+                {[
+                  { label: t.dateOfAssessment, value: today, mono: true },
+                  { label: t.surveyId, value: surveyId, mono: true },
+                  { label: t.verificationStandard, value: t.standardIndianRevenue, mono: false },
+                ].map((item, i) => (
+                  <div
+                    key={item.label}
+                    className={`space-y-1 ${i === 1 ? 'text-center' : i === 2 ? 'text-right' : ''} ${
+                      i > 0 ? 'border-l border-[var(--rule)] pl-4' : ''
+                    }`}
+                  >
+                    <span className="block text-[7.5px] font-semibold uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+                      {item.label}
+                    </span>
+                    <span
+                      className={`block text-[10px] leading-snug text-[var(--ink)] ${
+                        item.mono ? 'font-mono font-medium' : 'font-semibold'
+                      }`}
+                    >
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </section>
+
+              <Hairline strong />
+
+              {/* ---------- Geometry + lengths ---------- */}
+              <section id="cert-geometry" className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                {/* Scaled plot */}
+                <div className="md:col-span-5">
+                  <span className="block text-[7.5px] font-semibold uppercase tracking-[0.18em] text-[var(--ink-faint)] mb-2">
+                    {t.registeredBoundaryLayout}
+                  </span>
+                  {/* The frame matches the drawing's own 300×190 viewBox so the
+                      plot is never letterboxed and takes less sheet height. */}
+                  <div className="relative border border-[var(--rule)] bg-[var(--paper-2)] aspect-[300/190] overflow-hidden">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle,var(--rule)_0.7px,transparent_0.7px)] bg-[length:14px_14px] opacity-70" />
+                    {pA && pB && pC && pD && (
+                      <svg className="relative w-full h-full p-3" viewBox="0 0 300 190">
+                        <polygon
+                          points={`${pA.x},${pA.y} ${pB.x},${pB.y} ${pC.x},${pC.y} ${pD.x},${pD.y}`}
+                          fill="var(--seal)"
+                          fillOpacity="0.07"
+                          stroke="var(--seal)"
+                          strokeWidth="2"
+                          strokeLinejoin="round"
+                        />
+                        <line
+                          x1={pB.x}
+                          y1={pB.y}
+                          x2={pD.x}
+                          y2={pD.y}
+                          stroke="var(--rule-strong)"
+                          strokeWidth="1"
+                          strokeDasharray="4 3"
+                          opacity="0.75"
+                        />
+                        {[pA, pB, pC, pD].map((pt) => (
+                          <g key={pt.id}>
+                            <circle
+                              cx={pt.x}
+                              cy={pt.y}
+                              r="4.4"
+                              fill="var(--rule-strong)"
+                              stroke="var(--paper-2)"
+                              strokeWidth="1.4"
+                            />
+                            <text
+                              x={pt.x + (pt.id === 'A' || pt.id === 'D' ? -9 : 9)}
+                              y={pt.y + (pt.id === 'A' || pt.id === 'B' ? -7 : 9)}
+                              fontSize="9"
+                              fontWeight="700"
+                              fill="var(--ink)"
+                              textAnchor="middle"
+                              fontFamily="Inter, sans-serif"
+                            >
+                              {pt.label}
+                            </text>
+                          </g>
+                        ))}
+                      </svg>
+                    )}
+                  </div>
+                </div>
+
+                {/* Boundary lengths */}
+                <div className="md:col-span-7">
+                  <span className="block text-[7.5px] font-semibold uppercase tracking-[0.18em] text-[var(--ink-faint)] mb-2">
+                    {t.registeredLengths}
+                  </span>
+                  <table className="w-full text-[10px]">
+                    <thead>
+                      <tr className="border-b border-[var(--rule-strong)]/60">
+                        <th className="py-1.5 text-left font-semibold uppercase tracking-[0.12em] text-[7.5px] text-[var(--ink-faint)]">
+                          {t.boundarySide}
+                        </th>
+                        <th className="py-1.5 text-right font-semibold uppercase tracking-[0.12em] text-[7.5px] text-[var(--ink-faint)]">
+                          {t.direction}
+                        </th>
+                        <th className="py-1.5 text-right font-semibold uppercase tracking-[0.12em] text-[7.5px] text-[var(--ink-faint)]">
+                          {t.lengthUnit} ({getUnitLabel()})
+                        </th>
                       </tr>
                     </thead>
-                    <tbody className={`divide-y font-mono text-stone-700 ${
-                      darkMode ? 'divide-stone-800 text-stone-300 bg-stone-900/40' : 'divide-stone-100 text-stone-700 bg-white'
-                    }`}>
-                      <tr>
-                        <td className="px-4 py-2 font-bold font-sans">Side AB</td>
-                        <td className="px-4 py-2 text-right font-sans">{t.eastHindi}</td>
-                        <td className="px-4 py-2 text-right">{dimensions.sideAB.toFixed(2)}</td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-2 font-bold font-sans">Side BC</td>
-                        <td className="px-4 py-2 text-right font-sans">{t.northHindi}</td>
-                        <td className="px-4 py-2 text-right">{dimensions.sideBC.toFixed(2)}</td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-2 font-bold font-sans">Side CD</td>
-                        <td className="px-4 py-2 text-right font-sans">{t.westHindi}</td>
-                        <td className="px-4 py-2 text-right">{dimensions.sideCD.toFixed(2)}</td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-2 font-bold font-sans">Side DA</td>
-                        <td className="px-4 py-2 text-right font-sans">{t.southHindi}</td>
-                        <td className="px-4 py-2 text-right">{dimensions.sideDA.toFixed(2)}</td>
-                      </tr>
+                    <tbody>
+                      {[
+                        { side: 'AB', dir: t.eastHindi, val: dimensions.sideAB },
+                        { side: 'BC', dir: t.northHindi, val: dimensions.sideBC },
+                        { side: 'CD', dir: t.westHindi, val: dimensions.sideCD },
+                        { side: 'DA', dir: t.southHindi, val: dimensions.sideDA },
+                      ].map((row) => (
+                        <tr key={row.side} className="border-b border-[var(--rule)]/70">
+                          <td className="py-1.5 font-semibold text-[var(--ink)]">Side {row.side}</td>
+                          <td className="py-1.5 text-right text-[var(--ink-soft)]">{row.dir}</td>
+                          <td className="py-1.5 text-right font-mono font-medium text-[var(--ink)]">
+                            {row.val.toFixed(2)}
+                          </td>
+                        </tr>
+                      ))}
                       {dimensions.diagonalBD > 0 && (
-                        <tr className="bg-brand-500/5 font-sans">
-                          <td className="px-4 py-2 font-bold text-brand-900 dark:text-brand-400">{t.diagonalHindi}</td>
-                          <td className="px-4 py-2 text-right font-medium text-brand-800 dark:text-brand-500">{t.precisionLine}</td>
-                          <td className="px-4 py-2 text-right font-bold text-brand-900 dark:text-brand-400 font-mono">{dimensions.diagonalBD.toFixed(2)}</td>
+                        <tr>
+                          <td className="pt-1.5 font-semibold text-[var(--seal)]">{t.diagonalHindi}</td>
+                          <td className="pt-1.5 text-right text-[var(--ink-faint)] italic">{t.precisionLine}</td>
+                          <td className="pt-1.5 text-right font-mono font-semibold text-[var(--seal)]">
+                            {dimensions.diagonalBD.toFixed(2)}
+                          </td>
                         </tr>
                       )}
                     </tbody>
                   </table>
                 </div>
-              </div>
-            </div>
+              </section>
 
-            {/* Areas Table */}
-            <div className="space-y-3">
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">Calculation & Area Outputs</span>
-              <div className="bg-stone-900 text-white rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="space-y-1 text-center sm:text-left">
-                  <span className="text-[10px] text-brand-400 font-bold uppercase tracking-wider">
-                    Computed Area ({method === 'average' ? t.methodAverageMode : t.methodTriangularMode})
+              <Hairline strong />
+
+              {/* ---------- Hero figure ---------- */}
+              <section className="text-center">
+                <span className="block text-[7.5px] font-semibold uppercase tracking-[0.3em] text-[var(--ink-faint)]">
+                  {language === 'hi' ? 'कुल परिकलित क्षेत्रफल' : 'Total Computed Area'}
+                </span>
+                <div className="mt-1.5 flex items-baseline justify-center gap-2.5">
+                  <span className="font-serif text-[2.1rem] sm:text-[2.5rem] leading-none font-medium tabular-nums tracking-tight text-[var(--ink)]">
+                    {calculatedAreaInUnit.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </span>
-                  <div className="text-2xl md:text-3xl font-extrabold tracking-tight font-mono text-white flex items-baseline justify-center sm:justify-start gap-1">
-                    {calculatedAreaInUnit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    <span className="text-sm font-normal text-stone-300 uppercase">{getUnitSuffix()}</span>
-                  </div>
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--rule-strong)]">
+                    {getUnitSuffix()}
+                  </span>
                 </div>
+                <p className="mt-2 text-[9.5px] font-mono text-[var(--ink-faint)]">
+                  {unit !== 'feet' && (
+                    <>
+                      ≈{' '}
+                      {areaInSqFt.toLocaleString(undefined, {
+                        minimumFractionDigits: 1,
+                        maximumFractionDigits: 1,
+                      })}{' '}
+                      sq ft
+                      <span className="mx-2 text-[var(--rule)]">|</span>
+                    </>
+                  )}
+                  <span className="uppercase tracking-[0.1em]">
+                    {method === 'average' ? t.methodAverageMode : t.methodTriangularMode}
+                  </span>
+                </p>
+              </section>
 
-                <div className="h-px sm:h-12 w-full sm:w-px bg-stone-800"></div>
+              <Hairline strong />
 
-                <div className="text-center sm:text-right space-y-1">
-                  <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">{t.equivalentIndiaBaseline}</span>
-                  <div className="text-xl font-bold font-mono text-brand-400">
-                    {areaInSqFt.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
-                    <span className="text-xs font-normal text-stone-300 ml-1">sq ft</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Regional conversions list */}
-            <div className="space-y-3">
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">{t.regionalLandConversions}</span>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                {LAND_UNITS.map((unitDef) => {
-                  const converted = areaInSqFt / unitDef.sqFtValue;
-                  return (
-                    <div key={unitDef.id} className={`p-3 border rounded-lg space-y-1 ${
-                      darkMode ? 'bg-stone-800 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200 text-stone-700'
-                    }`}>
-                      <div className="flex justify-between items-baseline text-stone-500 font-semibold">
-                        <span className={darkMode ? 'text-stone-300 font-bold' : 'text-stone-700'}>{unitDef.name}</span>
-                        <span className="text-[9px] text-stone-400">{unitDef.hindiName}</span>
+              {/* ---------- Regional conversions ---------- */}
+              <section className="space-y-2.5">
+                <span className="block text-[7.5px] font-semibold uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+                  {t.regionalLandConversions}
+                </span>
+                <div id="cert-conversions" className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-2.5">
+                  {LAND_UNITS.map((unitDef) => {
+                    const converted = areaInSqFt / unitDef.sqFtValue;
+                    return (
+                      <div key={unitDef.id} className="border-t border-[var(--rule)] pt-1.5">
+                        <div className="flex items-baseline justify-between gap-1">
+                          <span className="text-[9px] font-semibold text-[var(--ink)] truncate">{unitDef.name}</span>
+                          <span className="text-[8px] text-[var(--ink-faint)] truncate">{unitDef.hindiName}</span>
+                        </div>
+                        <p className="font-mono text-[11px] font-semibold text-[var(--ink)] mt-0.5">
+                          {converted.toFixed(3)}
+                        </p>
+                        <p className="text-[7.5px] text-[var(--ink-faint)] truncate">{unitDef.region}</p>
                       </div>
-                      <p className={`font-bold text-sm font-mono ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>{converted.toFixed(3)}</p>
-                      <p className="text-[9px] text-stone-400 truncate">{unitDef.region}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Partners Splits if any */}
-            {sharesCount > 1 && (
-              <div className={`rounded-xl p-4 border text-xs space-y-2 ${
-                darkMode ? 'bg-stone-800 border-stone-800' : 'bg-stone-50 border-stone-200'
-              }`}>
-                <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">{t.inheritancePartnerDivisions} ({sharesCount} Shares)</span>
-                <div className={`grid grid-cols-3 gap-2 py-1 font-semibold border-b ${
-                  darkMode ? 'text-stone-300 border-stone-800' : 'text-stone-600 border-stone-200'
-                }`}>
-                  <span>{t.shareId}</span>
-                  <span className="text-right">{t.shareAreaUnit} ({getUnitLabel()})</span>
-                  <span className="text-right">{t.shareAreaSqFt}</span>
+                    );
+                  })}
                 </div>
-                {Array.from({ length: Math.min(sharesCount, 6) }).map((_, idx) => (
-                  <div key={idx} className={`grid grid-cols-3 gap-2 font-mono ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
-                    <span>Partner #{idx + 1}</span>
-                    <span className="text-right">{(calculatedAreaInUnit / sharesCount).toFixed(2)}</span>
-                    <span className="text-right">{(areaInSqFt / sharesCount).toFixed(1)}</span>
+              </section>
+
+              {/* ---------- Partner splits ---------- */}
+              {sharesCount > 1 && (
+                <section className="border border-[var(--rule)] bg-[var(--paper-2)]/70 px-4 py-3 space-y-1.5">
+                  <span className="block text-[7.5px] font-semibold uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+                    {t.inheritancePartnerDivisions} ({sharesCount}{' '}
+                    {language === 'hi' ? 'साझेदार' : sharesCount === 1 ? 'Share' : 'Shares'})
+                  </span>
+                  <div className="grid grid-cols-3 gap-2 py-1 border-b border-[var(--rule)] text-[7.5px] font-semibold uppercase tracking-[0.1em] text-[var(--ink-faint)]">
+                    <span>{t.shareId}</span>
+                    <span className="text-right">{t.shareAreaUnit} ({getUnitLabel()})</span>
+                    <span className="text-right">{t.shareAreaSqFt}</span>
                   </div>
-                ))}
-                {sharesCount > 6 && (
-                  <p className="text-[10px] text-stone-400 italic mt-1">+ {sharesCount - 6} {t.otherPartnersSplit}</p>
-                )}
-              </div>
-            )}
+                  {Array.from({ length: Math.min(sharesCount, 6) }).map((_, idx) => (
+                    <div key={idx} className="grid grid-cols-3 gap-2 font-mono text-[10px] text-[var(--ink)]">
+                      <span className="font-sans font-medium">
+                        {language === 'hi' ? `साझेदार #${idx + 1}` : `Partner #${idx + 1}`}
+                      </span>
+                      <span className="text-right">{(calculatedAreaInUnit / sharesCount).toFixed(2)}</span>
+                      <span className="text-right">{(areaInSqFt / sharesCount).toFixed(1)}</span>
+                    </div>
+                  ))}
+                  {sharesCount > 6 && (
+                    <p className="text-[9px] text-[var(--ink-faint)] italic pt-0.5">
+                      + {sharesCount - 6} {t.otherPartnersSplit}
+                    </p>
+                  )}
+                </section>
+              )}
 
-            {/* Footer Signatures */}
-            <div className={`grid grid-cols-2 gap-8 pt-10 border-t text-xs ${darkMode ? 'border-stone-800' : 'border-stone-200'}`}>
-              <div className="space-y-4">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{t.surveyorSignature}</span>
-                <div className={`h-10 border-b w-3/4 ${darkMode ? 'border-stone-800' : 'border-stone-300'}`}></div>
-                <p className="text-[10px] text-stone-500 font-medium">{t.licensedSurveyorOfficer}</p>
-              </div>
-
-              <div className="space-y-4 text-right flex flex-col items-end">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{t.officialAssessmentSeal}</span>
-                <div className="w-16 h-16 rounded-full bg-brand-500/5 border-2 border-dashed border-brand-600/30 flex items-center justify-center text-brand-700 font-serif font-extrabold tracking-tighter text-sm transform rotate-12">
-                  BHUMI MAP
+              {/* ---------- Signatures ---------- */}
+              <footer className="grid grid-cols-2 gap-8 pt-4 border-t border-[var(--rule)]">
+                <div className="space-y-2">
+                  <span className="block text-[7.5px] font-semibold uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+                    {t.surveyorSignature}
+                  </span>
+                  <div className="h-8 w-4/5 border-b border-[var(--ink-faint)]/60" />
+                  <p className="text-[9px] font-medium text-[var(--ink-soft)]">{t.licensedSurveyorOfficer}</p>
                 </div>
-                <p className="text-[9px] text-stone-400 font-medium italic">{t.verifiedDigitally}</p>
-              </div>
+
+                <div className="flex flex-col items-end justify-between">
+                  <span className="block text-[7.5px] font-semibold uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+                    {t.officialAssessmentSeal}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <p className="text-[8px] text-[var(--ink-faint)] italic text-right leading-tight max-w-[80px]">
+                      {t.verifiedDigitally}
+                    </p>
+                    <Seal />
+                  </div>
+                </div>
+              </footer>
             </div>
           </div>
+          {/* ================= /CERTIFICATE ================= */}
         </div>
       </div>
     </div>
