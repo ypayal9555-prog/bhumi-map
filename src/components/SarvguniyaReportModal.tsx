@@ -308,7 +308,7 @@ export default function SarvguniyaReportModal({
                 it would otherwise end ~200px above the foot of the sheet. A flex
                 column plus the spacer before the signatures lets the bands keep
                 their natural rhythm and pins only the footer to the sheet foot. */
-             #sg-cert-body {
+             #sg-body {
                display: flex !important;
                flex-direction: column !important;
                min-height: 297mm !important;
@@ -417,7 +417,7 @@ export default function SarvguniyaReportModal({
           >
             <CertificateFrame prefix="sg" />
 
-            <div id="sg-cert-body" className="relative px-6 sm:px-9 md:px-12 py-8 sm:py-10 md:py-12 space-y-5">
+            <div id="sg-body" className="relative px-6 sm:px-9 md:px-12 py-8 sm:py-10 md:py-12 space-y-5">
               {/* ---------- Letterhead ---------- */}
               <header className="text-center space-y-2.5">
                 <div className="flex items-center justify-center gap-2.5">

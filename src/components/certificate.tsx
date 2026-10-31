@@ -148,7 +148,7 @@ export function CertificateFrame({ prefix }: { prefix: string }) {
  * `prefix` is the id namespace the certificate renders with: the card must be
  * `<prefix>-print-card`, its overlay `<prefix>-overlay`, the scroll shell
  * `<prefix>-shell`, the scroll area `<prefix>-print-area`, the padded column
- * `<prefix>-cert-body`, and the frame parts `<prefix>-frame-*`. `extra` is
+ * `<prefix>-body`, and the frame parts `<prefix>-frame-*`. `extra` is
  * appended inside the print block for rules specific to one certificate.
  */
 export function certificatePrintCss(prefix: string, extra = ''): string {
@@ -244,7 +244,7 @@ export function certificatePrintCss(prefix: string, extra = ''): string {
           /* On screen the body carries the modal's padding; on paper it carries
              the sheet's own margins instead. 8mm/9mm leaves 726px of type width
              on a 794px sheet — the width the layout was measured at. */
-          #${prefix}-cert-body { padding: 8mm 9mm !important; }
+          #${prefix}-body { padding: 8mm 9mm !important; }
 
           ${card} svg { display: block !important; visibility: visible !important; }
 
