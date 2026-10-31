@@ -64,6 +64,9 @@ export default function SarvguniyaReportModal({
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    // Hindi renders the time as "… को 02:28 pm बजे"; a 24-hour clock reads as
+    // "… को 14:28 बजे" and drops the stray am/pm from the Devanagari line.
+    hour12: language !== 'hi',
   });
 
   const { results = null, mode = 'map', scale = '1/4000', instrument = 'meterGuniya', sideAB = '', sideBC = '', sideCD = '', sideDA = '' } = data || {};
