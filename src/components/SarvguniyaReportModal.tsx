@@ -5,8 +5,16 @@
 
 import React, { useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { Printer, X, Award, FileSpreadsheet, Map, Compass, Share2, Copy, Check, Send } from 'lucide-react';
+import { Printer, X, FileSpreadsheet, Compass, Share2, Copy, Check, Send } from 'lucide-react';
 import { SQFT_PER_BISWA, SQFT_PER_DISMIL, BISWA_PER_BIGHA } from '../units';
+import {
+  PAPER_LIGHT,
+  PAPER_DARK,
+  Hairline,
+  Seal,
+  CertificateFrame,
+  certificatePrintCss,
+} from './certificate';
 
 interface SarvguniyaReportModalProps {
   isOpen: boolean;
@@ -34,6 +42,13 @@ export default function SarvguniyaReportModal({
 }: SarvguniyaReportModalProps) {
   const printAreaRef = useRef<HTMLDivElement | null>(null);
   const [copied, setCopied] = useState(false);
+  // Stable report number: a fresh value on every render would change the
+  // certificate under the user's eyes and reprint with a different number.
+  const [surveyId] = useState(
+    () => `SG-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`
+  );
+
+  const paper = darkMode ? PAPER_DARK : PAPER_LIGHT;
 
   if (!isOpen) return null;
 
@@ -172,6 +187,10 @@ export default function SarvguniyaReportModal({
       north: 'उत्तर (Side BC)',
       west: 'पश्चिम (Side CD)',
       south: 'दक्षिण (Side DA)',
+      dirE: 'पूर्व',
+      dirN: 'उत्तर',
+      dirW: 'पश्चिम',
+      dirS: 'दक्षिण',
       averagesLabel: 'औसत भुजा मापन (पटवारी सूत्र)',
       avgLength: 'औसत लंबाई (AB + CD) / 2',
       avgWidth: 'औसत चौड़ाई (BC + DA) / 2',
@@ -207,6 +226,10 @@ export default function SarvguniyaReportModal({
       north: 'North (Side BC)',
       west: 'West (Side CD)',
       south: 'South (Side DA)',
+      dirE: 'East',
+      dirN: 'North',
+      dirW: 'West',
+      dirS: 'South',
       averagesLabel: 'Opposite Side Averages (Amin Formula)',
       avgLength: 'Average Length (AB + CD) / 2',
       avgWidth: 'Average Width (BC + DA) / 2',
@@ -264,49 +287,43 @@ export default function SarvguniyaReportModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-sm flex justify-center items-center p-2 sm:p-4 animate-fadeIn">
-      {/* Dynamic Printing Style overrides to print ONLY the certificate and hide everything else */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @media print {
-          body {
-            background: white !important;
-            color: black !important;
-            visibility: hidden;
-          }
-          #sarvguniya-print-card, #sarvguniya-print-card * {
-            visibility: visible;
-          }
-          #sarvguniya-print-card {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100% !important;
-            max-width: 100% !important;
-            border: none !important;
-            box-shadow: none !important;
-            background: white !important;
-            color: black !important;
-            padding: 0 !important;
-            margin: 0 !important;
-          }
-          #sarvguniya-print-card table {
-            min-width: 100% !important;
-            width: 100% !important;
-            font-size: 10px !important;
-          }
-          #sarvguniya-print-card .px-3 {
-            padding-left: 4px !important;
-            padding-right: 4px !important;
-          }
-          .no-print, button, [role="dialog"] button, svg {
-            display: none !important;
-          }
-        }
-      `}} />
+    <div
+      id="sg-overlay"
+      className="fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-sm flex justify-center items-center p-2 sm:p-4 animate-fadeIn"
+    >
+      {/*
+       * Print stylesheet shared with the standard certificate, namespaced "sg".
+       * The extra block pins the meta and unit bands to their wide layout: an A4
+       * content box at 9mm margins is 726px, just under Tailwind's 768px `md`
+       * breakpoint, so they would otherwise collapse to 2 columns and push the
+       * certificate onto a second sheet.
+       */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: certificatePrintCss(
+            'sg',
+            `#sg-meta { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+             #sg-units { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+             /* This certificate carries fewer rows than the standard report, so
+                it would otherwise end ~200px above the foot of the sheet. A flex
+                column plus the spacer before the signatures lets the bands keep
+                their natural rhythm and pins only the footer to the sheet foot. */
+             #sg-cert-body {
+               display: flex !important;
+               flex-direction: column !important;
+               min-height: 297mm !important;
+               padding: 8mm 9mm 14mm !important;
+             }`
+          ),
+        }}
+      />
 
-      <div className={`rounded-2xl w-full max-w-4xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh] overflow-hidden border ${
-        darkMode ? 'bg-stone-900 border-stone-850' : 'bg-white border-stone-200'
-      }`}>
+      <div
+        id="sg-shell"
+        className={`rounded-2xl w-full max-w-4xl shadow-2xl flex flex-col max-h-[95vh] sm:max-h-[90vh] overflow-hidden border ${
+          darkMode ? 'bg-stone-900 border-stone-850' : 'bg-white border-stone-200'
+        }`}
+      >
         {/* Modal Top Control Bar */}
         <div className={`px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center ${
           darkMode ? 'bg-stone-950 text-stone-100 border-b border-stone-800' : 'bg-stone-900 text-white'
@@ -391,236 +408,278 @@ export default function SarvguniyaReportModal({
         {/* Modal Body / Report Content Container */}
         <div className={`flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 transition-colors duration-300 ${
           darkMode ? 'bg-stone-950' : 'bg-stone-100'
-        }`} id="print-area" ref={printAreaRef}>
-          {/* Main report card */}
-          <div 
-            id="sarvguniya-print-card"
-            className={`border-4 border-double rounded-lg p-4 sm:p-6 md:p-10 shadow-sm max-w-3xl mx-auto space-y-6 sm:space-y-8 relative overflow-hidden print:border-none print:shadow-none transition-colors duration-300 ${
-              darkMode 
-                ? 'bg-stone-900 border-stone-800 text-stone-300' 
-                : 'bg-white border-stone-300 text-stone-700'
-            }`}
+        }`} id="sg-print-area" ref={printAreaRef}>
+          {/* ================= CERTIFICATE ================= */}
+          <div
+            id="sg-print-card"
+            style={paper}
+            className="relative max-w-3xl mx-auto bg-[var(--paper)] text-[var(--ink)] shadow-sm print:shadow-none"
           >
-            {/* Elegant watermark background pattern for printing authenticity */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-stone-50/10 pointer-events-none"></div>
+            <CertificateFrame prefix="sg" />
 
-            {/* Certificate Header */}
-            <div className={`text-center space-y-1.5 border-b pb-4 sm:pb-6 relative ${darkMode ? 'border-stone-800' : 'border-stone-200'}`}>
-              <span className="text-[10px] sm:text-xs tracking-widest text-brand-700 dark:text-brand-500 font-bold uppercase block">{l.officialMapAssessment}</span>
-              <h1 className={`text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-serif uppercase ${darkMode ? 'text-stone-100' : 'text-stone-950'}`}>{l.certTitle}</h1>
-              <p className={`text-[10px] sm:text-xs font-medium tracking-wide leading-relaxed ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-                {l.subTitle}
-              </p>
-              <div className="flex justify-center items-center gap-2 mt-2">
-                <span className="h-0.5 w-10 sm:w-12 bg-brand-600"></span>
-                <Award className="w-4 h-4 sm:w-5 sm:h-5 text-brand-600" />
-                <span className="h-0.5 w-10 sm:w-12 bg-brand-600"></span>
-              </div>
-            </div>
-
-            {/* Report Metadata */}
-            <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 text-[11px] sm:text-xs border-b pb-4 sm:pb-5 ${darkMode ? 'border-stone-800' : 'border-stone-100'}`}>
-              <div className="space-y-0.5">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{l.dateLabel}</span>
-                <span className={`font-bold font-mono block truncate ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{today}</span>
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{l.idLabel}</span>
-                <span className={`font-bold font-mono uppercase block truncate ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>SG-{Math.floor(100000 + Math.random() * 900000)}</span>
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{l.modeLabel}</span>
-                <span className={`font-bold block truncate ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>
-                  {mode === 'map' ? l.modeMap : l.modeGround}
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-stone-400 font-semibold uppercase text-[9px] block">{l.instrumentLabel}</span>
-                <span className={`font-bold block truncate ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{getInstrumentName()}</span>
-              </div>
-            </div>
-
-            {!results || !results.isComplete ? (
-              <div className="py-8 sm:py-12 px-4 text-center max-w-md mx-auto space-y-4">
-                <div className="inline-flex items-center justify-center p-3 bg-brand-500/10 text-brand-600 rounded-full">
-                  <Compass className="w-8 h-8 animate-pulse" />
+            <div id="sg-cert-body" className="relative px-6 sm:px-9 md:px-12 py-8 sm:py-10 md:py-12 space-y-5">
+              {/* ---------- Letterhead ---------- */}
+              <header className="text-center space-y-2.5">
+                <div className="flex items-center justify-center gap-2.5">
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[var(--rule-strong)]" />
+                  <span className="text-[9px] font-semibold tracking-[0.42em] uppercase text-[var(--ink-soft)]">
+                    Bhumi Map
+                  </span>
+                  <span className="w-1.5 h-1.5 rotate-45 bg-[var(--rule-strong)]" />
                 </div>
-                <h3 className={`text-base sm:text-lg font-bold tracking-tight ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>
-                  {l.warnTitle}
-                </h3>
-                <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
-                  {l.warnDesc}
+
+                <div className="flex items-center gap-3">
+                  <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--rule-strong)]/70" />
+                  <span className="w-1 h-1 rotate-45 bg-[var(--rule-strong)]" />
+                  <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[var(--rule-strong)]/70" />
+                </div>
+
+                <h1 className="font-serif text-[1.55rem] sm:text-[1.85rem] md:text-[2rem] font-medium leading-[1.14] tracking-tight text-[var(--ink)]">
+                  {l.certTitle}
+                </h1>
+
+                <p className="text-[10px] sm:text-[11px] font-medium tracking-[0.2em] uppercase text-[var(--ink-faint)]">
+                  {l.subTitle}
                 </p>
-                <motion.button
-                  onClick={onClose}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-stone-800 hover:bg-stone-700 dark:bg-stone-700 dark:hover:bg-stone-600 text-white font-semibold text-xs px-4 py-2 rounded-lg transition-colors cursor-pointer select-none inline-block"
-                >
-                  {l.warnAction}
-                </motion.button>
-              </div>
-            ) : (
-              <>
-                {/* Scrollable Layout for Ground Distances Table (Prevents layout break on Mobile) */}
-                <div className="space-y-2">
-                  <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">{l.recordedSides}</span>
-                  <div className={`overflow-x-auto border rounded-xl scrollbar-thin ${darkMode ? 'border-stone-800' : 'border-stone-200'}`}>
-                    <table className="min-w-[620px] w-full divide-y divide-stone-200 text-xs">
-                      <thead className={darkMode ? 'bg-stone-850 text-stone-300 uppercase font-semibold' : 'bg-stone-50 text-stone-500 uppercase font-semibold'}>
-                        <tr>
-                          <th className="px-3 py-2 text-left">{l.sideCol}</th>
-                          <th className="px-3 py-2 text-right">{l.directionCol}</th>
-                          <th className="px-3 py-2 text-right">{l.enteredCol}</th>
-                          <th className="px-3 py-2 text-right">{l.metersCol}</th>
-                          <th className="px-3 py-2 text-right">{l.feetCol}</th>
+
+                <div className="pt-1">
+                  <span className="inline-block text-[8.5px] font-semibold tracking-[0.2em] uppercase text-[var(--rule-strong)] border-y border-[var(--rule)] px-3 py-1">
+                    {l.officialMapAssessment}
+                  </span>
+                </div>
+              </header>
+
+              {/* ---------- Record meta ---------- */}
+              <section id="sg-meta" className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { label: l.dateLabel, value: today, mono: true },
+                  { label: l.idLabel, value: surveyId, mono: true },
+                  {
+                    label: l.modeLabel,
+                    value: mode === 'map' ? l.modeMap : l.modeGround,
+                    mono: false,
+                  },
+                  { label: l.instrumentLabel, value: getInstrumentName(), mono: false },
+                ].map((item, i) => (
+                  <div
+                    key={item.label}
+                    className={`space-y-1 ${i > 0 ? 'border-l border-[var(--rule)] pl-4' : ''}`}
+                  >
+                    <span className="block text-[7.5px] font-semibold uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+                      {item.label}
+                    </span>
+                    <span
+                      className={`block text-[10px] leading-snug text-[var(--ink)] ${
+                        item.mono ? 'font-mono font-medium' : 'font-semibold'
+                      }`}
+                    >
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </section>
+
+              <Hairline strong />
+
+              {!results || !results.isComplete ? (
+                /* Nothing measured yet: the certificate stays on the sheet but
+                   cannot carry figures, so it asks for the four sides instead. */
+                <div className="py-12 text-center space-y-3">
+                  <Compass className="w-8 h-8 mx-auto text-[var(--rule-strong)]" aria-hidden="true" />
+                  <h3 className="font-serif text-lg font-medium text-[var(--ink)]">{l.warnTitle}</h3>
+                  <p className="text-[10px] text-[var(--ink-faint)] leading-relaxed max-w-sm mx-auto">
+                    {l.warnDesc}
+                  </p>
+                  <button
+                    onClick={onClose}
+                    className="inline-block mt-1 px-4 py-2 rounded-lg bg-brand-700 hover:bg-brand-800 text-white text-[11px] font-semibold transition-colors cursor-pointer select-none"
+                  >
+                    {l.warnAction}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* ---------- Recorded sides ---------- */}
+                  <section className="space-y-2">
+                    <span className="block text-[7.5px] font-semibold uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+                      {l.recordedSides}
+                    </span>
+                    <table className="w-full text-[9.5px]">
+                      <thead>
+                        <tr className="border-b border-[var(--rule-strong)]/60">
+                          <th className="py-1.5 text-left font-semibold uppercase tracking-[0.12em] text-[7.5px] text-[var(--ink-faint)]">
+                            {l.sideCol}
+                          </th>
+                          <th className="py-1.5 text-left font-semibold uppercase tracking-[0.12em] text-[7.5px] text-[var(--ink-faint)]">
+                            {l.directionCol}
+                          </th>
+                          <th className="py-1.5 text-right font-semibold uppercase tracking-[0.12em] text-[7.5px] text-[var(--ink-faint)]">
+                            {l.enteredCol}
+                          </th>
+                          <th className="py-1.5 text-right font-semibold uppercase tracking-[0.12em] text-[7.5px] text-[var(--ink-faint)]">
+                            {l.metersCol}
+                          </th>
+                          <th className="py-1.5 text-right font-semibold uppercase tracking-[0.12em] text-[7.5px] text-[var(--ink-faint)]">
+                            {l.feetCol}
+                          </th>
                         </tr>
                       </thead>
-                      <tbody className={`divide-y font-mono text-stone-700 ${
-                        darkMode ? 'divide-stone-800 text-stone-300 bg-stone-900/40' : 'divide-stone-100 text-stone-700 bg-white'
-                      }`}>
+                      <tbody>
                         {['AB', 'BC', 'CD', 'DA'].map((sideKey) => {
                           const distObj = results.distances[sideKey];
-                          const valStr = sideKey === 'AB' ? sideAB : sideKey === 'BC' ? sideBC : sideKey === 'CD' ? sideCD : sideDA;
-                          const dirStr = sideKey === 'AB' ? l.east : sideKey === 'BC' ? l.north : sideKey === 'CD' ? l.west : l.south;
+                          const valStr =
+                            sideKey === 'AB' ? sideAB : sideKey === 'BC' ? sideBC : sideKey === 'CD' ? sideCD : sideDA;
+                          const dirKey = sideKey === 'AB' ? 'dirE' : sideKey === 'BC' ? 'dirN' : sideKey === 'CD' ? 'dirW' : 'dirS';
 
                           return (
-                            <tr key={sideKey}>
-                              <td className="px-3 py-2.5 font-bold font-sans">Side {sideKey}</td>
-                              <td className="px-3 py-2.5 text-right font-sans">{dirStr}</td>
-                              <td className="px-3 py-2.5 text-right font-bold">{valStr ? `${parseFloat(valStr)} ${getUnitName()}` : l.notFilled}</td>
-                              <td className="px-3 py-2.5 text-right font-extrabold text-stone-900 dark:text-stone-100">
-                                {distObj ? `${distObj.meters.toFixed(2)} m` : '-'}
+                            <tr key={sideKey} className="border-b border-[var(--rule)]/70">
+                              <td className="py-1.5 font-semibold text-[var(--ink)]">Side {sideKey}</td>
+                              <td className="py-1.5 text-[var(--ink-soft)]">{(l as any)[dirKey]}</td>
+                              <td className="py-1.5 text-right text-[var(--ink-soft)]">
+                                {valStr ? `${parseFloat(valStr)} ${getUnitName()}` : l.notFilled}
                               </td>
-                              <td className="px-3 py-2.5 text-right text-stone-500 font-semibold font-sans">
+                              <td className="py-1.5 text-right font-mono font-medium text-[var(--ink)]">
+                                {distObj ? `${distObj.meters.toFixed(2)} m` : '—'}
+                              </td>
+                              <td className="py-1.5 text-right font-mono">
                                 {distObj ? (
-                                  <span className="text-[10px] space-x-1.5 block">
-                                    <span>{distObj.feet.toFixed(1)} ft</span>
-                                    <span className="opacity-40">•</span>
-                                    <span>{distObj.kadi.toFixed(0)} कड़ी</span>
-                                    <span className="opacity-40">•</span>
-                                    <span>{distObj.gaj.toFixed(0)} गज</span>
-                                  </span>
-                                ) : '-'}
+                                  <>
+                                    <span className="block text-[var(--ink)]">{distObj.feet.toFixed(1)} ft</span>
+                                    <span className="block text-[7.5px] text-[var(--ink-faint)]">
+                                      {distObj.kadi.toFixed(0)} कड़ी · {distObj.gaj.toFixed(0)} गज
+                                    </span>
+                                  </>
+                                ) : (
+                                  '—'
+                                )}
                               </td>
                             </tr>
                           );
                         })}
                       </tbody>
                     </table>
-                  </div>
-                </div>
+                  </section>
 
-                {/* Village Amin Averages */}
-                {results.averages && (
-                  <div className="space-y-2">
-                    <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">{l.averagesLabel}</span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <div className={`p-3.5 border rounded-xl space-y-1 ${darkMode ? 'bg-stone-850/40 border-stone-800' : 'bg-stone-50 border-stone-200'}`}>
-                        <span className="text-[9px] sm:text-[10px] text-stone-400 font-bold uppercase block">{l.avgLength}</span>
-                        <p className="text-sm sm:text-base font-extrabold font-mono text-stone-900 dark:text-stone-100">
-                          {results.averages.lengthM.toFixed(2)} meters
-                        </p>
-                        <p className="text-[10px] font-semibold text-stone-500 font-mono">
-                          ≈ {results.averages.lengthFt.toFixed(2)} ft | {results.averages.lengthKadi.toFixed(1)} kadi
-                        </p>
-                      </div>
+                  <Hairline strong />
 
-                      <div className={`p-3.5 border rounded-xl space-y-1 ${darkMode ? 'bg-stone-850/40 border-stone-800' : 'bg-stone-50 border-stone-200'}`}>
-                        <span className="text-[9px] sm:text-[10px] text-stone-400 font-bold uppercase block">{l.avgWidth}</span>
-                        <p className="text-sm sm:text-base font-extrabold font-mono text-stone-900 dark:text-stone-100">
-                          {results.averages.widthM.toFixed(2)} meters
-                        </p>
-                        <p className="text-[10px] font-semibold text-stone-500 font-mono">
-                          ≈ {results.averages.widthFt.toFixed(2)} ft | {results.averages.widthKadi.toFixed(1)} kadi
-                        </p>
-                      </div>
+                  {/* ---------- Hero figure ---------- */}
+                  <section className="text-center">
+                    <span className="block text-[7.5px] font-semibold uppercase tracking-[0.3em] text-[var(--ink-faint)]">
+                      {l.calculatedArea}
+                    </span>
+                    <div className="mt-1.5 flex items-baseline justify-center gap-2.5">
+                      <span className="font-serif text-[2.1rem] sm:text-[2.5rem] leading-none font-medium tabular-nums tracking-tight text-[var(--ink)]">
+                        {results.area.sqF.toLocaleString(undefined, { maximumFractionDigits: 1 })}
+                      </span>
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--rule-strong)]">
+                        sq ft
+                      </span>
                     </div>
-                  </div>
-                )}
+                    <p className="mt-2 text-[9.5px] font-mono text-[var(--ink-faint)]">
+                      ≈ {results.area.sqM.toLocaleString(undefined, { maximumFractionDigits: 2 })} sq m
+                      <span className="mx-2 text-[var(--rule)]">|</span>
+                      <span className="uppercase tracking-[0.1em]">{l.villageAverage}</span>
+                    </p>
+                  </section>
 
-                {/* Calculated Area Details */}
-                {results.area && (
-                  <>
-                    <div className="space-y-2">
-                      <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">{l.calculatedArea}</span>
-                      <div className="bg-stone-900 text-white rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-                        <div className="space-y-1 text-center sm:text-left">
-                          <span className="text-[9px] sm:text-[10px] text-brand-400 font-bold uppercase tracking-wider">
-                            {language === 'hi' ? 'कुल क्षेत्रफल (ग्राम औसत विधि)' : 'Total Ground Area (Village Avg)'}
+                  <Hairline strong />
+
+                  {/* ---------- Averages ---------- */}
+                  {results.averages && (
+                    <section className="grid grid-cols-2 gap-4">
+                      {[
+                        {
+                          label: l.avgLength,
+                          m: results.averages.lengthM,
+                          ft: results.averages.lengthFt,
+                          kadi: results.averages.lengthKadi,
+                        },
+                        {
+                          label: l.avgWidth,
+                          m: results.averages.widthM,
+                          ft: results.averages.widthFt,
+                          kadi: results.averages.widthKadi,
+                        },
+                      ].map((avg) => (
+                        <div key={avg.label} className="border-t border-[var(--rule)] pt-1.5">
+                          <span className="block text-[7.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-faint)]">
+                            {avg.label}
                           </span>
-                          <div className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-mono text-white flex items-baseline justify-center sm:justify-start gap-1">
-                            {results.area.sqF.toLocaleString(undefined, { maximumFractionDigits: 1 })}
-                            <span className="text-xs sm:text-sm font-normal text-stone-300 uppercase">sq ft</span>
-                          </div>
+                          <p className="font-mono text-[12px] font-semibold text-[var(--ink)] mt-0.5">
+                            {avg.m.toFixed(2)} m
+                          </p>
+                          <p className="text-[8px] font-mono text-[var(--ink-faint)]">
+                            ≈ {avg.ft.toFixed(2)} ft · {avg.kadi.toFixed(1)} कड़ी
+                          </p>
                         </div>
+                      ))}
+                    </section>
+                  )}
 
-                        <div className="h-px sm:h-12 w-full sm:w-px bg-stone-800"></div>
-
-                        <div className="text-center sm:text-right space-y-0.5">
-                          <span className="text-[9px] sm:text-[10px] text-stone-400 font-bold uppercase tracking-wider">
-                            {language === 'hi' ? 'वर्ग मीटर रूपांतरण' : 'Square Meter Eq.'}
+                  {/* ---------- Regional conversions ---------- */}
+                  <section className="space-y-2">
+                    <span className="block text-[7.5px] font-semibold uppercase tracking-[0.18em] text-[var(--ink-faint)]">
+                      {l.landUnits}
+                    </span>
+                    <div id="sg-units" className="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-2.5">
+                      {[
+                        { name: language === 'hi' ? 'बिस्वा' : 'Biswa', value: results.area.biswa.toFixed(2), basis: `${SQFT_PER_BISWA.toLocaleString('en-IN')} sq ft` },
+                        { name: language === 'hi' ? 'बीघा' : 'Bigha', value: results.area.bigha.toFixed(3), basis: `${BISWA_PER_BIGHA} Biswa` },
+                        { name: language === 'hi' ? 'डिसमिल' : 'Dismil', value: results.area.dismil.toFixed(2), basis: `${SQFT_PER_DISMIL.toLocaleString('en-IN')} sq ft` },
+                        { name: language === 'hi' ? 'एकड़' : 'Acre', value: results.area.acre.toFixed(3), basis: '100 Dismil' },
+                        { name: language === 'hi' ? 'हेक्टेयर' : 'Hectare', value: results.area.hectare.toFixed(4), basis: '10,000 sq m' },
+                      ].map((u) => (
+                        <div key={u.name} className="border-t border-[var(--rule)] pt-1.5">
+                          <span className="block text-[9px] font-semibold text-[var(--ink)] truncate">
+                            {u.name}
                           </span>
-                          <div className="text-lg sm:text-xl font-bold font-mono text-brand-400">
-                            {results.area.sqM.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                            <span className="text-xs font-normal text-stone-300 ml-1">sq m</span>
-                          </div>
+                          <p className="font-mono text-[11px] font-semibold text-[var(--ink)] mt-0.5">{u.value}</p>
+                          <p className="text-[7.5px] text-[var(--ink-faint)] truncate">{u.basis}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* ---------- Signatures + seal ---------- */}
+                  {/* Absorbs the leftover sheet height in print, so the bands
+                      above keep their spacing and the signatures sit at the foot. */}
+                  <div className="flex-1" aria-hidden="true" />
+                  <footer className="pt-4 border-t border-[var(--rule)] space-y-3">
+                    <div className="grid grid-cols-2 gap-8">
+                      <div className="space-y-2">
+                        <span className="block text-[7.5px] font-semibold uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+                          {language === 'hi' ? 'सर्वेक्षक हस्ताक्षर' : 'Surveyor Signature'}
+                        </span>
+                        <div className="h-8 w-4/5 border-b border-[var(--ink-faint)]/60" />
+                        <p className="text-[9px] font-medium text-[var(--ink-soft)]">
+                          {language === 'hi' ? 'लाइसेंस प्राप्त सर्वेक्षक अधिकारी' : 'Licensed Surveyor Officer'}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col items-end justify-between">
+                        <span className="block text-[7.5px] font-semibold uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+                          {language === 'hi' ? 'अधिकारिक मूल्यांकन मुहर' : 'Official Assessment Seal'}
+                        </span>
+                        <div className="flex items-center gap-3">
+                          <p className="text-[8px] text-[var(--ink-faint)] italic text-right leading-tight max-w-[80px]">
+                            {language === 'hi' ? 'भूमि मानचित्र क्लाउड से डिजिटल सत्यापित' : 'Verified Digitally via Bhumi Map Cloud'}
+                          </p>
+                          <Seal />
                         </div>
                       </div>
                     </div>
 
-                    {/* Regional land record units */}
-                    <div className="space-y-2">
-                      <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest block">{l.landUnits}</span>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 text-xs">
-                        <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
-                          <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'बिस्वा (Biswa)' : 'Biswa'}</span>
-                          <p className="text-sm sm:text-base font-extrabold font-mono text-brand-600 dark:text-brand-500">{results.area.biswa.toFixed(2)}</p>
-                          <span className="text-[8px] text-stone-400 font-medium">{SQFT_PER_BISWA.toLocaleString('en-IN')} sq ft</span>
-                        </div>
-
-                        <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
-                          <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'बीघा (Bigha)' : 'Bigha'}</span>
-                          <p className="text-sm sm:text-base font-extrabold font-mono text-brand-600 dark:text-brand-500">{results.area.bigha.toFixed(3)}</p>
-                          <span className="text-[8px] text-stone-400 font-medium">{BISWA_PER_BIGHA} Biswa</span>
-                        </div>
-
-                        <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
-                          <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'डिसमिल (Dismil)' : 'Dismil'}</span>
-                          <p className="text-sm sm:text-base font-extrabold font-mono text-stone-800 dark:text-stone-200">{results.area.dismil.toFixed(2)}</p>
-                          <span className="text-[8px] text-stone-400 font-medium">{SQFT_PER_DISMIL.toLocaleString('en-IN')} sq ft</span>
-                        </div>
-
-                        <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
-                          <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'एकड़ (Acre)' : 'Acre'}</span>
-                          <p className="text-sm sm:text-base font-extrabold font-mono text-stone-800 dark:text-stone-200">{results.area.acre.toFixed(3)}</p>
-                          <span className="text-[8px] text-stone-400 font-medium">100 Dismil</span>
-                        </div>
-
-                        <div className={`p-2.5 sm:p-3.5 border rounded-xl text-center space-y-1 col-span-2 sm:col-span-1 ${darkMode ? 'bg-stone-850 border-stone-800 text-stone-300' : 'bg-stone-50 border-stone-200'}`}>
-                          <span className="text-[9px] sm:text-[10px] font-bold text-stone-400 block truncate">{language === 'hi' ? 'हेक्टेयर (Hectare)' : 'Hectare'}</span>
-                          <p className="text-sm sm:text-base font-extrabold font-mono text-stone-800 dark:text-stone-200">{results.area.hectare.toFixed(4)}</p>
-                          <span className="text-[8px] text-stone-400 font-medium">10,000 sq m</span>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </>
-            )}
-
-            {/* Print Friendly Footer Signatures and Disclaimer */}
-            <div className="pt-6 border-t border-dashed border-stone-300 dark:border-stone-800 flex flex-col sm:flex-row justify-between items-center text-[10px] text-stone-400 gap-4">
-              <p className="text-center sm:text-left">
-                {language === 'hi' 
-                  ? '* यह दस्तावेज़ केवल विलेज अमीन/पटवारी भू-लेख रिकॉर्ड्स के संदर्भ हेतु तैयार की गयी डिजिटल गणना रिपोर्ट है।' 
-                  : '* This report serves as a digital computation record compliant with traditional revenue/Patwari benchmarks.'}
-              </p>
-              <div className="flex gap-2">
-                <span className="px-2 py-0.5 border rounded font-mono font-bold">1 BISWA = {SQFT_PER_BISWA} SQFT</span>
-                <span className="px-2 py-0.5 border rounded font-mono font-bold">{BISWA_PER_BIGHA} BISWA = 1 BIGHA</span>
-              </div>
+                    <p className="text-[8px] text-[var(--ink-faint)] italic leading-snug">
+                      {language === 'hi'
+                        ? '* यह दस्तावेज़ केवल विलेज अमीन/पटवारी भू-लेख रिकॉर्ड्स के संदर्भ हेतु तैयार की गयी डिजिटल गणना रिपोर्ट है।'
+                        : '* This report serves as a digital computation record compliant with traditional revenue/Patwari benchmarks.'}
+                    </p>
+                  </footer>
+                </>
+              )}
             </div>
           </div>
+          {/* ================= /CERTIFICATE ================= */}
         </div>
       </div>
     </div>
